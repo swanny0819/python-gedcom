@@ -45,18 +45,19 @@ class TestParser(unittest.TestCase):
         self.assertEqual(20, individuals_in_element_list)
 
     def test_parse_from_string(self):
-        case_1 = """0 @I5@ INDI
-1 NAME First /Last/
-1 SEX M
-1 BIRT
-2 DATE 1 JAN 1900
-2 PLAC Kirkland, King, Washington, USA
-3 MAP
-4 LATI N47.680663
-4 LONG W122.234319
-"""
+        case_1 = """
+            0 @I5@ INDI
+                1 NAME First /Last/
+                1 SEX M
+                1 BIRT
+                    2 DATE 1 JAN 1900
+                    2 PLAC Kirkland, King, Washington, USA
+                        3 MAP
+                            4 LATI N47.680663
+                            4 LONG W122.234319
+            """
         gedcom_parser = Parser()
-        gedcom_parser.parse([(a + '\n').encode('utf-8-sig') for a in case_1.splitlines()])
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(case_1))
         element_1 = gedcom_parser.get_root_child_elements()[0]
         self.assertTrue(isinstance(element_1, IndividualElement))
         self.assertEqual('INDI', element_1.get_tag())
@@ -67,20 +68,21 @@ class TestParser(unittest.TestCase):
         self.assertEqual('SEX', element_1_children[1].get_tag())
         self.assertEqual('BIRT', element_1_children[2].get_tag())
 
-        case_2 = """0 @F28@ FAM
-1 HUSB @I80@
-1 WIFE @I81@
-1 CHIL @I9@
-2 _FREL Natural
-2 _MREL Natural
-1 CHIL @I84@
-2 _FREL Natural
-2 _MREL Natural
-1 CHIL @I85@
-2 _FREL Natural
-2 _MREL Natural
-"""
-        gedcom_parser.parse([(a + '\n').encode('utf-8-sig') for a in case_2.splitlines()])
+        case_2 = """
+            0 @F28@ FAM
+                1 HUSB @I80@
+                1 WIFE @I81@
+                1 CHIL @I9@
+                    2 _FREL Natural
+                    2 _MREL Natural
+                1 CHIL @I84@
+                    2 _FREL Natural
+                    2 _MREL Natural
+                1 CHIL @I85@
+                    2 _FREL Natural
+                    2 _MREL Natural
+            """
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(case_2))
         element_2 = gedcom_parser.get_root_child_elements()[0]
         self.assertEqual('FAM', element_2.get_tag())
         self.assertEqual('@F28@', element_2.get_pointer())
@@ -90,3 +92,9 @@ class TestParser(unittest.TestCase):
         self.assertEqual('WIFE', element_2_children[1].get_tag())
         self.assertEqual('CHIL', element_2_children[2].get_tag())
         self.assertEqual('@I84@', element_2_children[3].get_value())
+
+    @staticmethod
+    def _convert_gedcom_string_into_parsable_content(gedcom_file_contents_test_string):
+        # Ignores whitespace "lines" at the start and end of the string - allows prettier presentation in the tests.
+        # Ignores leading and trailing whitespace on each line - allows for indentation of lines to show clearer test strings.
+        return [(a.strip() + '\n').encode('utf-8-sig') for a in gedcom_file_contents_test_string.strip().splitlines()]
