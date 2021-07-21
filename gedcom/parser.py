@@ -54,7 +54,7 @@ class GedcomFormatViolationError(Exception):
 class Parser(object):
     """Parses and manipulates GEDCOM 5.5 format data
 
-    For documentation of the GEDCOM 5.5 format, see: http://homepages.rootsweb.ancestry.com/~pmcbride/gedcom/55gctoc.htm
+    For documentation of the GEDCOM 5.5 format, see: https://homepages.rootsweb.com/~pmcbride/gedcom/55gctoc.htm
 
     This parser reads and parses a GEDCOM file.
 
@@ -107,7 +107,7 @@ class Parser(object):
         database was modified, you should call `invalidate_cache()` once to let
         this method return updated data.
 
-        :rtype: dict of Element
+        :rtype: dict[str, Element]
         """
         if not self.__element_dictionary:
             self.__element_dictionary = {
