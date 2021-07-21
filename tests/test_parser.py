@@ -31,21 +31,19 @@ class TestParser(unittest.TestCase):
         self.assertEqual(34, len(parser.get_root_child_elements()))
 
         individuals_in_root_child_elements = 0
-        individuals_in_element_list = 0
-
         for element in parser.get_root_child_elements():
             if isinstance(element, IndividualElement):
                 individuals_in_root_child_elements += 1
+        self.assertEqual(20, individuals_in_root_child_elements)
 
+        individuals_in_element_list = 0
         for element in parser.get_element_list():
             if isinstance(element, IndividualElement):
                 individuals_in_element_list += 1
-
-        self.assertEqual(20, individuals_in_root_child_elements)
         self.assertEqual(20, individuals_in_element_list)
 
-    def test_parse_from_string(self):
-        case_1 = """
+    def test_parse__should_be_able_to_parse_single_individual_from_a_string(self):
+        single_individual_use_case = """
             0 @I5@ INDI
                 1 NAME First /Last/
                 1 SEX M
@@ -57,7 +55,7 @@ class TestParser(unittest.TestCase):
                             4 LONG W122.234319
             """
         gedcom_parser = Parser()
-        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(case_1))
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(single_individual_use_case))
         element_1 = gedcom_parser.get_root_child_elements()[0]
         self.assertTrue(isinstance(element_1, IndividualElement))
         self.assertEqual('INDI', element_1.get_tag())
@@ -68,7 +66,8 @@ class TestParser(unittest.TestCase):
         self.assertEqual('SEX', element_1_children[1].get_tag())
         self.assertEqual('BIRT', element_1_children[2].get_tag())
 
-        case_2 = """
+    def test_parse__should_be_able_to_parse_single_family_from_a_string(self):
+        single_family_use_case = """
             0 @F28@ FAM
                 1 HUSB @I80@
                 1 WIFE @I81@
@@ -82,7 +81,8 @@ class TestParser(unittest.TestCase):
                     2 _FREL Natural
                     2 _MREL Natural
             """
-        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(case_2))
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(single_family_use_case))
         element_2 = gedcom_parser.get_root_child_elements()[0]
         self.assertEqual('FAM', element_2.get_tag())
         self.assertEqual('@F28@', element_2.get_pointer())
