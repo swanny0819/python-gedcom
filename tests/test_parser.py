@@ -417,8 +417,6 @@ class TestParser(unittest.TestCase):
         self.assertEqual("@I4@", ancestors[2].get_pointer())
         self.assertEqual("@I5@", ancestors[3].get_pointer())
 
-    # FIXME - skipped test due to underlying bug #2 - get_ancestors does not pass down the ancestor_type
-    @unittest.skip("Skipping until the underlying bug is fixed")
     def test_get_ancestors__should_not_return_the_persons_grandparents_if_searching_natural_only_and_the_parent_was_adopted(self):
         use_case = """
             0 @I1@ INDI
@@ -457,8 +455,8 @@ class TestParser(unittest.TestCase):
         individual = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I1@")
         ancestors = gedcom_parser.get_ancestors(individual, ancestor_type="NAT")
         self.assertEqual(2, len(ancestors), ancestors)
-        self.assertEqual("@I2@", ancestors[0].get_pointer())
-        self.assertEqual("@I3@", ancestors[1].get_pointer())
+        self.assertEqual("@I3@", ancestors[0].get_pointer())
+        self.assertEqual("@I2@", ancestors[1].get_pointer())
 
     # ------------------- START OF get_parents TESTING ----------------
 

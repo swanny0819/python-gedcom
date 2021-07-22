@@ -380,7 +380,7 @@ class Parser(object):
         ancestors.extend(parents)
 
         for parent in parents:
-            ancestors.extend(self.get_ancestors(parent))
+            ancestors.extend(self.get_ancestors(parent, ancestor_type))
 
         return ancestors
 
