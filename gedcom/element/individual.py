@@ -154,26 +154,6 @@ class IndividualElement(Element):
 
         return date, place, sources
 
-    def get_birth_year(self):
-        """Returns the birth year of a person in integer format
-        :rtype: int
-        """
-        date = ""
-
-        for child in self.get_child_elements():
-            if child.get_tag() == gedcom.tags.GEDCOM_TAG_BIRTH:
-                for childOfChild in child.get_child_elements():
-                    if childOfChild.get_tag() == gedcom.tags.GEDCOM_TAG_DATE:
-                        date_split = childOfChild.get_value().split()
-                        date = date_split[len(date_split) - 1]
-
-        if date == "":
-            return -1
-        try:
-            return int(date)
-        except ValueError:
-            return -1
-
     def get_death_data(self):
         """Returns the death data of a person formatted as a tuple: (`str` date, `str` place, `list` sources)
         :rtype: tuple
@@ -194,14 +174,11 @@ class IndividualElement(Element):
 
         return date, place, sources
 
-    def get_death_year(self):
-        """Returns the death year of a person in integer format
-        :rtype: int
-        """
+    def __get_year_in_tag_type(self, tag):
         date = ""
 
         for child in self.get_child_elements():
-            if child.get_tag() == gedcom.tags.GEDCOM_TAG_DEATH:
+            if child.get_tag() == tag:
                 for childOfChild in child.get_child_elements():
                     if childOfChild.get_tag() == gedcom.tags.GEDCOM_TAG_DATE:
                         date_split = childOfChild.get_value().split()
@@ -213,6 +190,18 @@ class IndividualElement(Element):
             return int(date)
         except ValueError:
             return -1
+
+    def get_birth_year(self):
+        """Returns the birth year of a person in integer format
+        :rtype: int
+        """
+        return self.__get_year_in_tag_type(gedcom.tags.GEDCOM_TAG_BIRTH)
+
+    def get_death_year(self):
+        """Returns the death year of a person in integer format
+        :rtype: int
+        """
+        return self.__get_year_in_tag_type(gedcom.tags.GEDCOM_TAG_DEATH)
 
     @deprecated
     def get_burial(self):
