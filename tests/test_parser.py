@@ -1,9 +1,12 @@
 import unittest
 
+from gedcom.element.family import NotAnActualFamilyError
+
 from gedcom.element.object import ObjectElement
 from gedcom.element.individual import IndividualElement, NotAnActualIndividualError
 from gedcom.element.root import RootElement
-from gedcom.parser import Parser, GedcomFormatViolationError
+from gedcom.parser import Parser, GedcomFormatViolationError, FAMILY_MEMBERS_TYPE_PARENTS, FAMILY_MEMBERS_TYPE_HUSBAND, FAMILY_MEMBERS_TYPE_WIFE, \
+    FAMILY_MEMBERS_TYPE_CHILDREN
 
 
 class TestParser(unittest.TestCase):
@@ -707,9 +710,7 @@ class TestParser(unittest.TestCase):
         descendant = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I1@")
         self.assertRaises(NotAnActualIndividualError, gedcom_parser.find_path_to_ancestor, descendant, "@I2@")
 
-    # TODO: FINISH developing this test.
-    @unittest.skip("Finish developing this test.")
-    def test_find_path_to_ancestor__should_create_path_when_ancestor_is_parent_of_descendant(self):
+    def test_find_path_to_ancestor__should_create_path_when_ancestor_is_the_descendant(self):
         use_case = """
             0 @I1@ INDI
                 1 NAME Kid /Last/
@@ -726,12 +727,31 @@ class TestParser(unittest.TestCase):
         gedcom_parser = Parser()
         gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(use_case))
         descendant = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I1@")
-        ancestor = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I2@")
+        ancestor = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I1@")
         path = gedcom_parser.find_path_to_ancestor(descendant, ancestor)
         self.assertEqual([descendant], path)
 
-    # TODO: FINISH developing this test.
-    @unittest.skip("Finish developing this test.")
+    def test_find_path_to_ancestor__should_create_path_when_ancestor_is_parent_of_descendant(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME Kid /Last/
+                1 FAMC @F1@
+            0 @I2@ INDI
+                1 NAME Dad /Last/
+                1 FAMS @F1@
+            0 @F1@ FAM
+                1 HUSB @I2@
+                1 CHIL @I1@
+                    2 _FREL Natural
+                1 MARR
+        """
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(use_case))
+        descendant = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I1@")
+        ancestor = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I2@")
+        path = gedcom_parser.find_path_to_ancestor(descendant, ancestor)
+        self.assertEqual([descendant.get_pointer(), ancestor.get_pointer()], self._convert_element_list_to_pointer_list(path))
+
     def test_find_path_to_ancestor__should_create_path_when_ancestor_is_grandparent_of_descendant(self):
         use_case = """
             0 @I1@ INDI
@@ -747,12 +767,12 @@ class TestParser(unittest.TestCase):
             0 @F1@ FAM
                 1 HUSB @I2@
                 1 CHIL @I1@
-                    2 _MREL Natural
+                    2 _FREL Natural
                 1 MARR
             0 @F2@ FAM
                 1 HUSB @I3@
                 1 CHIL @I2@
-                    2 _MREL Natural
+                    2 _FREL Natural
                 1 MARR
         """
         gedcom_parser = Parser()
@@ -761,19 +781,100 @@ class TestParser(unittest.TestCase):
         ancestor = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I3@")
         path = gedcom_parser.find_path_to_ancestor(descendant, ancestor)
 
-        parents = gedcom_parser.get_parents(descendant)
-        print("parents:")
-        for parent in parents:
-            print(parent.get_pointer())
+        self.assertEqual(["@I1@", "@I2@", "@I3@"], self._convert_element_list_to_pointer_list(path))
 
-        grandparents = gedcom_parser.get_parents(ancestor)
-        print("grandparents:")
-        for grandparent in grandparents:
-            print(grandparent.get_pointer())
+    def test_find_path_to_ancestor__should_create_empty_path_when_ancestor_is_not_actually_an_ancestor(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME Kid /Last/
+                1 FAMC @F1@
+            0 @I2@ INDI
+                1 NAME Other /Guy/
+            0 @I3@ INDI
+                1 NAME Dad /Last/
+                1 FAMS @F1@
+            0 @F1@ FAM
+                1 HUSB @I3@
+                1 CHIL @I1@
+                    2 _FREL Natural
+                1 MARR
+        """
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(use_case))
+        descendant = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I1@")
+        ancestor = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I2@")
+        path = gedcom_parser.find_path_to_ancestor(descendant, ancestor)
 
-        self.assertEqual([descendant], path)
+        self.assertEqual(None, path)
 
-    # TODO: test_find_path_to_ancestor__should_create_empty_path_when_ancestor_is_not_actually_an_ancestor
+    # ------------------- START OF get_family_members TESTING ----------------
+
+    def test_get_family_members__should_raise_exception_if_not_passed_a_family_element(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME Kid /Last/
+                1 FAMC @F1@
+            0 @F1@ FAM
+                1 CHIL @I1@
+                1 MARR
+        """
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(use_case))
+        self.assertRaises(NotAnActualFamilyError, gedcom_parser.get_family_members, "@I1@")
+
+    _get_family_members_use_case = """
+            0 @I1@ INDI
+                1 NAME Kid /Last/
+                1 FAMC @F1@
+            0 @I2@ INDI
+                1 NAME Husband /Last/
+                1 FAMS @F1@
+            0 @I3@ INDI
+                1 NAME Wife /Maiden/
+                1 FAMS @F1@
+            0 @F1@ FAM
+                1 HUSB @I2@
+                1 WIFE @I3@
+                1 CHIL @I1@
+                    2 _FREL Natural
+                    2 _MREL Natural
+                1 MARR
+        """
+
+    def test_get_family_members__should_get_all_family_members_if_not_using_a_family_member_type_flag(self):
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(self._get_family_members_use_case))
+        family_element = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@F1@")
+        family_members = gedcom_parser.get_family_members(family_element)
+        self.assertEqual(["@I2@", "@I3@", "@I1@"], self._convert_element_list_to_pointer_list(family_members))
+
+    def test_get_family_members__should_get_the_parents_only_if_searching_using_the_parent_flag(self):
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(self._get_family_members_use_case))
+        family_element = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@F1@")
+        family_members = gedcom_parser.get_family_members(family_element, members_type=FAMILY_MEMBERS_TYPE_PARENTS)
+        self.assertEqual(["@I2@", "@I3@"], self._convert_element_list_to_pointer_list(family_members))
+
+    def test_get_family_members__should_get_the_husband_only_if_searching_using_the_husband_flag(self):
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(self._get_family_members_use_case))
+        family_element = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@F1@")
+        family_members = gedcom_parser.get_family_members(family_element, members_type=FAMILY_MEMBERS_TYPE_HUSBAND)
+        self.assertEqual(["@I2@"], self._convert_element_list_to_pointer_list(family_members))
+
+    def test_get_family_members__should_get_the_wife_only_if_searching_using_the_wife_flag(self):
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(self._get_family_members_use_case))
+        family_element = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@F1@")
+        family_members = gedcom_parser.get_family_members(family_element, members_type=FAMILY_MEMBERS_TYPE_WIFE)
+        self.assertEqual(["@I3@"], self._convert_element_list_to_pointer_list(family_members))
+
+    def test_get_family_members__should_get_the_children_only_if_searching_using_the_children_flag(self):
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(self._get_family_members_use_case))
+        family_element = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@F1@")
+        family_members = gedcom_parser.get_family_members(family_element, members_type=FAMILY_MEMBERS_TYPE_CHILDREN)
+        self.assertEqual(["@I1@"], self._convert_element_list_to_pointer_list(family_members))
 
     # ------------------------------ START OF HELPER METHODS -----------------------
 
@@ -788,3 +889,7 @@ class TestParser(unittest.TestCase):
         for element in root_child_elements:
             if element.get_pointer() == pointer:
                 return element
+
+    @staticmethod
+    def _convert_element_list_to_pointer_list(element_list):
+        return [x.get_pointer() for x in element_list]
