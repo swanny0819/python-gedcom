@@ -424,7 +424,7 @@ class Parser(object):
         """Return path from descendant to ancestor
         :rtype: object
         """
-        if not isinstance(descendant, IndividualElement) and isinstance(ancestor, IndividualElement):
+        if not isinstance(descendant, IndividualElement) or not isinstance(ancestor, IndividualElement):
             raise NotAnActualIndividualError(
                 "Operation only valid for elements with %s tag." % gedcom.tags.GEDCOM_TAG_INDIVIDUAL
             )

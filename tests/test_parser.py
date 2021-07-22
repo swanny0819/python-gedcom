@@ -693,8 +693,6 @@ class TestParser(unittest.TestCase):
 
     # ------------------- START OF find_path_to_ancestor TESTING ----------------
 
-    # FIXME - skipped test due to underlying bug #3 - find_path_to_ancestor has a bad check for validity of arguments
-    @unittest.skip("Skipping until the underlying bug is fixed")
     def test_find_path_to_ancestor__should_raise_exception_if_not_passed_an_individual_element_for_the_descendant(self):
         use_case = """
             0 @I1@ INDI
@@ -707,8 +705,6 @@ class TestParser(unittest.TestCase):
         ancestor = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I2@")
         self.assertRaises(NotAnActualIndividualError, gedcom_parser.find_path_to_ancestor, "@I1@", ancestor)
 
-    # FIXME - skipped test due to underlying bug #3 - find_path_to_ancestor has a bad check for validity of arguments
-    @unittest.skip("Skipping until the underlying bug is fixed")
     def test_find_path_to_ancestor__should_raise_exception_if_not_passed_an_individual_element_for_the_ancestor(self):
         use_case = """
             0 @I1@ INDI
