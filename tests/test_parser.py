@@ -191,8 +191,7 @@ class TestParser(unittest.TestCase):
         gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(single_individual_use_case))
         self.assertRaises(NotAnActualIndividualError, gedcom_parser.get_marriages, "@I5@")
 
-    def test_get_marriages__should_only_find_marriages_of_provided_individual(self):
-        use_case = """
+    _marriages_use_case = """
             0 @I5@ INDI
                 1 NAME First /Last/
                 1 FAMS @F3@
@@ -217,12 +216,516 @@ class TestParser(unittest.TestCase):
                 1 WIFE @I87@
                 1 MARR
             """
+
+    def test_get_marriages__should_only_find_marriages_of_provided_individual(self):
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(self._marriages_use_case))
+        individual = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I5@")
+        marriages = gedcom_parser.get_marriages(individual)
+        self.assertEqual([('', 'ILLINOIS'), ('1901', ''), ('', '')], marriages)
+
+    def test_get_marriage_years__should_raise_exception_if_not_passed_an_individual_element(self):
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(self._marriages_use_case))
+        self.assertRaises(NotAnActualIndividualError, gedcom_parser.get_marriage_years, "@I5@")
+
+    def test_get_marriage_years__should_gracefully_handle_value_errors_in_the_date(self):
+        value_error_use_case = """
+                0 @I5@ INDI
+                    1 NAME First /Last/
+                    1 FAMS @F2@
+                0 @F2@ FAM
+                    1 HUSB @I5@
+                    1 WIFE @I81@
+                    1 MARR
+                        2 DATE This is not a date.
+                """
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(value_error_use_case))
+        individual = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I5@")
+        marriage_years = gedcom_parser.get_marriage_years(individual)
+        self.assertEqual([], marriage_years)
+
+    def test_get_marriage_years__should_only_find_marriage_years_of_provided_individual(self):
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(self._marriages_use_case))
+        individual = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I5@")
+        marriage_years = gedcom_parser.get_marriage_years(individual)
+        self.assertEqual([1901], marriage_years)
+
+    # ------------------- START OF marriage_year_match TESTING ----------------
+
+    def test_marriage_year_match__should_raise_exception_if_not_passed_an_individual_element(self):
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(self._marriages_use_case))
+        self.assertRaises(NotAnActualIndividualError, gedcom_parser.marriage_year_match, "@I5@", 1953)
+
+    def test_marriage_year_match__should_be_able_to_match_the_year_if_present(self):
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(self._marriages_use_case))
+        individual = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I5@")
+        self.assertTrue(gedcom_parser.marriage_year_match(individual, 1901))
+
+    def test_marriage_year_match__should_not_be_able_to_match_the_year_if_not_present(self):
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(self._marriages_use_case))
+        individual = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I5@")
+        self.assertFalse(gedcom_parser.marriage_year_match(individual, 1902))
+
+    # ------------------- START OF marriage_range_match TESTING ----------------
+
+    def test_marriage_range_match__should_raise_exception_if_not_passed_an_individual_element(self):
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(self._marriages_use_case))
+        self.assertRaises(NotAnActualIndividualError, gedcom_parser.marriage_range_match, "@I5@", 1953, 1957)
+
+    def test_marriage_range_match__should_be_able_to_match_the_year_if_present_in_the_range(self):
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(self._marriages_use_case))
+        individual = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I5@")
+        self.assertTrue(gedcom_parser.marriage_range_match(individual, 1900, 1902))
+
+    def test_marriage_range_match__should_not_be_able_to_match_the_year_if_all_precede_the_range(self):
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(self._marriages_use_case))
+        individual = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I5@")
+        self.assertFalse(gedcom_parser.marriage_range_match(individual, 1902, 1999))
+
+    def test_marriage_range_match__should_not_be_able_to_match_the_year_if_all_follow_the_range(self):
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(self._marriages_use_case))
+        individual = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I5@")
+        self.assertFalse(gedcom_parser.marriage_range_match(individual, 1801, 1899))
+
+    # ------------------- START OF get_families TESTING ----------------
+
+    def test_get_families__should_raise_exception_if_not_passed_an_individual_element(self):
+        simple_use_case = """
+                0 @I5@ INDI
+                    1 NAME First /Last/
+        """
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(simple_use_case))
+        self.assertRaises(NotAnActualIndividualError, gedcom_parser.get_families, "@I5@")
+
+    # ------------------- START OF get_ancestors TESTING ----------------
+
+    def test_get_ancestors__should_raise_exception_if_not_passed_an_individual_element(self):
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(""))
+        self.assertRaises(NotAnActualIndividualError, gedcom_parser.get_ancestors, "@I5@")
+
+    def test_get_ancestors__should_return_nobody_if_they_have_no_ancestors(self):
+        use_case = """
+                0 @I5@ INDI
+                    1 NAME First /Last/
+        """
         gedcom_parser = Parser()
         gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(use_case))
         individual = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I5@")
-        marriages = gedcom_parser.get_marriages(individual)
-        self.assertEqual(3, len(marriages))
-        self.assertEqual([('', 'ILLINOIS'), ('1901', ''), ('', '')], marriages)
+        ancestors = gedcom_parser.get_ancestors(individual)
+        self.assertEqual(0, len(ancestors), ancestors)
+
+    def test_get_ancestors__should_return_the_persons_parents_if_they_have_no_grandparents(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME Kid /Last/
+                1 FAMC @F1@
+            0 @I2@ INDI
+                1 NAME Dad /Last/
+                1 FAMS @F1@
+            0 @I3@ INDI
+                1 NAME Mom /Maiden/
+                1 FAMS @F1@
+            0 @F1@ FAM
+                1 HUSB @I2@
+                1 WIFE @I3@
+                1 CHIL @I1@
+                    2 _FREL Natural
+                    2 _MREL Natural
+                1 MARR
+            """
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(use_case))
+        individual = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I1@")
+        ancestors = gedcom_parser.get_ancestors(individual)
+        self.assertEqual(2, len(ancestors), ancestors)
+        self.assertEqual("@I2@", ancestors[0].get_pointer())
+        self.assertEqual("@I3@", ancestors[1].get_pointer())
+
+    # FIXME - skipped test due to underlying bug #1 - get_parent returns the wrong parent when only one is natural
+    @unittest.skip("Skipping until the underlying bug is fixed")
+    def test_get_ancestors__should_return_the_persons_single_parent_if_they_do_not_have_two(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME Kid /Last/
+                1 FAMC @F1@
+            0 @I2@ INDI
+                1 NAME Dad /Last/
+                1 FAMS @F1@
+            0 @F1@ FAM
+                1 HUSB @I2@
+                1 CHIL @I1@
+                    2 _FREL Natural
+                    2 _MREL Natural
+                1 MARR
+            """
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(use_case))
+        individual = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I1@")
+        ancestors = gedcom_parser.get_ancestors(individual)
+        self.assertEqual(2, len(ancestors), ancestors)
+        self.assertEqual("@I2@", ancestors[0].get_pointer())
+        self.assertEqual("@I3@", ancestors[1].get_pointer())
+
+    def test_get_ancestors__should_return_the_persons_parents_and_available_grandparents_if_they_have_some(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME Kid /Last/
+                1 FAMC @F1@
+            0 @I2@ INDI
+                1 NAME Dad /Last/
+                1 FAMS @F1@
+                1 FAMC @F2@
+            0 @I3@ INDI
+                1 NAME Mom /Maiden/
+                1 FAMS @F1@
+            0 @I4@ INDI
+                1 NAME Grandpa /Last/
+                1 FAMS @F2@
+            0 @I5@ INDI
+                1 NAME Grandma /Maiden/
+                1 FAMS @F2@
+            0 @F1@ FAM
+                1 HUSB @I2@
+                1 WIFE @I3@
+                1 CHIL @I1@
+                    2 _FREL Natural
+                    2 _MREL Natural
+                1 MARR
+            0 @F2@ FAM
+                1 HUSB @I4@
+                1 WIFE @I5@
+                1 CHIL @I2@
+                    2 _FREL Natural
+                    2 _MREL Natural
+                1 MARR
+            """
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(use_case))
+        individual = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I1@")
+        ancestors = gedcom_parser.get_ancestors(individual)
+        self.assertEqual(4, len(ancestors), ancestors)
+        self.assertEqual("@I2@", ancestors[0].get_pointer())
+        self.assertEqual("@I3@", ancestors[1].get_pointer())
+        self.assertEqual("@I4@", ancestors[2].get_pointer())
+        self.assertEqual("@I5@", ancestors[3].get_pointer())
+
+    # FIXME - skipped test due to underlying bug #2 - get_ancestors does not pass down the ancestor_type
+    @unittest.skip("Skipping until the underlying bug is fixed")
+    def test_get_ancestors__should_not_return_the_persons_grandparents_if_searching_natural_only_and_the_parent_was_adopted(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME Kid /Last/
+                1 FAMC @F1@
+            0 @I2@ INDI
+                1 NAME Dad /Last/
+                1 FAMS @F1@
+                1 FAMC @F2@
+            0 @I3@ INDI
+                1 NAME Mom /Maiden/
+                1 FAMS @F1@
+            0 @I4@ INDI
+                1 NAME Grandpa /Last/
+                1 FAMS @F2@
+            0 @I5@ INDI
+                1 NAME Grandma /Maiden/
+                1 FAMS @F2@
+            0 @F1@ FAM
+                1 HUSB @I2@
+                1 WIFE @I3@
+                1 CHIL @I1@
+                    2 _FREL Natural
+                    2 _MREL Natural
+                1 MARR
+            0 @F2@ FAM
+                1 HUSB @I4@
+                1 WIFE @I5@
+                1 CHIL @I2@
+                    2 _FREL Adopted
+                    2 _MREL Adopted
+                1 MARR
+            """
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(use_case))
+        individual = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I1@")
+        ancestors = gedcom_parser.get_ancestors(individual, ancestor_type="NAT")
+        self.assertEqual(2, len(ancestors), ancestors)
+        self.assertEqual("@I2@", ancestors[0].get_pointer())
+        self.assertEqual("@I3@", ancestors[1].get_pointer())
+
+    # ------------------- START OF get_parents TESTING ----------------
+
+    def test_get_parents__should_raise_exception_if_not_passed_an_individual_element(self):
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(""))
+        self.assertRaises(NotAnActualIndividualError, gedcom_parser.get_parents, "@I5@")
+
+    def test_get_parents__should_handle_a_person_without_parents(self):
+        use_case = """
+                0 @I5@ INDI
+                    1 NAME First /Last/
+        """
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(use_case))
+        individual = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I5@")
+        parents = gedcom_parser.get_parents(individual)
+        self.assertEqual([], parents)
+
+    def test_get_parents__should_handle_a_person_with_both_natural_parents_when_getting_all(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME Kid /Last/
+                1 FAMC @F1@
+            0 @I2@ INDI
+                1 NAME Dad /Last/
+                1 FAMS @F1@
+            0 @I3@ INDI
+                1 NAME Mom /Maiden/
+                1 FAMS @F1@
+            0 @F1@ FAM
+                1 HUSB @I2@
+                1 WIFE @I3@
+                1 CHIL @I1@
+                    2 _FREL Natural
+                    2 _MREL Natural
+                1 MARR
+        """
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(use_case))
+        individual = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I1@")
+        parents = gedcom_parser.get_parents(individual)
+        self.assertEqual(2, len(parents), parents)
+        self.assertEqual("@I2@", parents[0].get_pointer())
+        self.assertEqual("@I3@", parents[1].get_pointer())
+
+    def test_get_parents__should_only_return_the_indicated_childs_parents_when_getting_natural_parents_only(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME Adopted Kid /Last/
+                1 FAMC @F1@
+            0 @I4@ INDI
+                1 NAME Natural Kid /Last/
+                1 FAMC @F1@
+            0 @I2@ INDI
+                1 NAME Dad /Last/
+                1 FAMS @F1@
+            0 @I3@ INDI
+                1 NAME Mom /Maiden/
+                1 FAMS @F1@
+            0 @F1@ FAM
+                1 HUSB @I2@
+                1 WIFE @I3@
+                1 CHIL @I1@
+                    2 _FREL Adopted
+                    2 _MREL Adopted
+                1 CHIL @I4@
+                    2 _FREL Natural
+                    2 _MREL Natural
+                1 MARR
+        """
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(use_case))
+        individual = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I1@")
+        parents = gedcom_parser.get_parents(individual, parent_type="NAT")
+        self.assertEqual(0, len(parents), parents)
+
+    def test_get_parents__should_handle_a_person_with_both_adoptive_parents_when_getting_all(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME Kid /Last/
+                1 FAMC @F1@
+            0 @I2@ INDI
+                1 NAME Dad /Last/
+                1 FAMS @F1@
+            0 @I3@ INDI
+                1 NAME Mom /Maiden/
+                1 FAMS @F1@
+            0 @F1@ FAM
+                1 HUSB @I2@
+                1 WIFE @I3@
+                1 CHIL @I540@
+                    2 _FREL Adopted
+                    2 _MREL Adopted
+                1 MARR
+        """
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(use_case))
+        individual = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I1@")
+        parents = gedcom_parser.get_parents(individual)
+        self.assertEqual(2, len(parents), parents)
+        self.assertEqual("@I2@", parents[0].get_pointer())
+        self.assertEqual("@I3@", parents[1].get_pointer())
+
+    # FIXME - skipped test due to underlying bug #1 - get_parent returns the wrong parent when only one is natural
+    @unittest.skip("Skipping until the underlying bug is fixed")
+    def test_get_parents__should_handle_a_person_with_a_single_natural_female_parent_when_getting_natural_only(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME Kid /Last/
+                1 FAMC @F1@
+            0 @I2@ INDI
+                1 NAME Dad /Last/
+                1 FAMS @F1@
+            0 @I3@ INDI
+                1 NAME Mom /Maiden/
+                1 FAMS @F1@
+            0 @F1@ FAM
+                1 HUSB @I2@
+                1 WIFE @I3@
+                1 CHIL @I1@
+                    2 _FREL Natural
+                    2 _MREL Adopted
+                1 MARR
+        """
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(use_case))
+        individual = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I1@")
+        parents = gedcom_parser.get_parents(individual, parent_type="NAT")
+        self.assertEqual(1, len(parents), parents)
+        self.assertEqual("@I3@", parents[0].get_pointer())
+
+    # FIXME - skipped test due to underlying bug #1 - get_parent returns the wrong parent when only one is natural
+    @unittest.skip("Skipping until the underlying bug is fixed")
+    def test_get_parents__should_handle_a_person_with_a_single_natural_male_parent_when_getting_natural_only(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME Kid /Last/
+                1 FAMC @F1@
+            0 @I2@ INDI
+                1 NAME Dad /Last/
+                1 FAMS @F1@
+            0 @I3@ INDI
+                1 NAME Mom /Maiden/
+                1 FAMS @F1@
+            0 @F1@ FAM
+                1 HUSB @I2@
+                1 WIFE @I3@
+                1 CHIL @I1@
+                    2 _FREL Adopted
+                    2 _MREL Natural
+                1 MARR
+        """
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(use_case))
+        individual = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I1@")
+        parents = gedcom_parser.get_parents(individual, parent_type="NAT")
+        self.assertEqual(1, len(parents), parents)
+        self.assertEqual("@I2@", parents[0].get_pointer())
+
+    def test_get_parents__should_handle_a_person_with_no_natural_parent_when_getting_natural_only(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME Kid /Last/
+                1 FAMC @F1@
+            0 @I2@ INDI
+                1 NAME Dad /Last/
+                1 FAMS @F1@
+            0 @I3@ INDI
+                1 NAME Mom /Maiden/
+                1 FAMS @F1@
+            0 @F1@ FAM
+                1 HUSB @I2@
+                1 WIFE @I3@
+                1 CHIL @I1@
+                    2 _FREL Adopted
+                    2 _MREL Adopted
+                1 MARR
+        """
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(use_case))
+        individual = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I1@")
+        parents = gedcom_parser.get_parents(individual, parent_type="NAT")
+        self.assertEqual(0, len(parents), parents)
+
+    def test_get_parents__should_handle_a_person_with_parents_in_multiple_families(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME Kid /Last/
+                1 FAMC @F1@
+                1 FAMC @F2@
+            0 @I2@ INDI
+                1 NAME Dad /Last/
+                1 FAMS @F1@
+            0 @I3@ INDI
+                1 NAME Mom /Maiden/
+                1 FAMS @F1@
+            0 @I4@ INDI
+                1 NAME Dad /Adoptive/
+                1 FAMS @F2@
+            0 @I5@ INDI
+                1 NAME Mom /MaidenAdoptive/
+                1 FAMS @F2@
+            0 @F1@ FAM
+                1 HUSB @I2@
+                1 WIFE @I3@
+                1 CHIL @1@
+                    2 _FREL Natural
+                    2 _MREL Natural
+                1 MARR
+            0 @F2@ FAM
+                1 HUSB @I4@
+                1 WIFE @I5@
+                1 CHIL @I1@
+                    2 _FREL Adopted
+                    2 _MREL Adopted
+                1 MARR
+        """
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(use_case))
+        individual = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I1@")
+        parents = gedcom_parser.get_parents(individual)
+        self.assertEqual(4, len(parents), parents)
+        self.assertEqual("@I2@", parents[0].get_pointer())
+        self.assertEqual("@I3@", parents[1].get_pointer())
+        self.assertEqual("@I4@", parents[2].get_pointer())
+        self.assertEqual("@I5@", parents[3].get_pointer())
+
+    # ------------------- START OF find_path_to_ancestor TESTING ----------------
+
+    # FIXME - skipped test due to underlying bug #3 - find_path_to_ancestor has a bad check for validity of arguments
+    @unittest.skip("Skipping until the underlying bug is fixed")
+    def test_find_path_to_ancestor__should_raise_exception_if_not_passed_an_individual_element_for_the_descendant(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME Kid /Last/
+            0 @I2@ INDI
+                1 NAME Dad /Last/
+        """
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(use_case))
+        ancestor = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I2@")
+        self.assertRaises(NotAnActualIndividualError, gedcom_parser.find_path_to_ancestor, "@I1@", ancestor)
+
+    # FIXME - skipped test due to underlying bug #3 - find_path_to_ancestor has a bad check for validity of arguments
+    @unittest.skip("Skipping until the underlying bug is fixed")
+    def test_find_path_to_ancestor__should_raise_exception_if_not_passed_an_individual_element_for_the_ancestor(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME Kid /Last/
+            0 @I2@ INDI
+                1 NAME Dad /Last/
+        """
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(use_case))
+        descendant = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I1@")
+        self.assertRaises(NotAnActualIndividualError, gedcom_parser.find_path_to_ancestor, descendant, "@I2@")
+
+    # TODO: test_find_path_to_ancestor__should_create_path_when_ancestor_is_parent_of_descendant
+    # TODO: test_find_path_to_ancestor__should_create_path_when_ancestor_is_grandparent_of_descendant
+    # TODO: test_find_path_to_ancestor__should_create_empty_path_when_ancestor_is_not_actually_an_ancestor
+
+    # ------------------------------ START OF HELPER METHODS -----------------------
 
     @staticmethod
     def _convert_gedcom_string_into_parsable_content(gedcom_file_contents_test_string):
