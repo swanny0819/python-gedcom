@@ -455,8 +455,8 @@ class TestParser(unittest.TestCase):
         individual = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I1@")
         ancestors = gedcom_parser.get_ancestors(individual, ancestor_type="NAT")
         self.assertEqual(2, len(ancestors), ancestors)
-        self.assertEqual("@I3@", ancestors[0].get_pointer())
-        self.assertEqual("@I2@", ancestors[1].get_pointer())
+        self.assertEqual("@I2@", ancestors[0].get_pointer())
+        self.assertEqual("@I3@", ancestors[1].get_pointer())
 
     # ------------------- START OF get_parents TESTING ----------------
 
@@ -576,8 +576,8 @@ class TestParser(unittest.TestCase):
                 1 HUSB @I2@
                 1 WIFE @I3@
                 1 CHIL @I1@
-                    2 _FREL Natural
-                    2 _MREL Adopted
+                    2 _MREL Natural
+                    2 _FREL Adopted
                 1 MARR
         """
         gedcom_parser = Parser()
@@ -602,8 +602,8 @@ class TestParser(unittest.TestCase):
                 1 HUSB @I2@
                 1 WIFE @I3@
                 1 CHIL @I1@
-                    2 _FREL Adopted
-                    2 _MREL Natural
+                    2 _MREL Adopted
+                    2 _FREL Natural
                 1 MARR
         """
         gedcom_parser = Parser()
@@ -707,8 +707,72 @@ class TestParser(unittest.TestCase):
         descendant = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I1@")
         self.assertRaises(NotAnActualIndividualError, gedcom_parser.find_path_to_ancestor, descendant, "@I2@")
 
-    # TODO: test_find_path_to_ancestor__should_create_path_when_ancestor_is_parent_of_descendant
-    # TODO: test_find_path_to_ancestor__should_create_path_when_ancestor_is_grandparent_of_descendant
+    # TODO: FINISH developing this test.
+    @unittest.skip("Finish developing this test.")
+    def test_find_path_to_ancestor__should_create_path_when_ancestor_is_parent_of_descendant(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME Kid /Last/
+                1 FAMC @F1@
+            0 @I2@ INDI
+                1 NAME Dad /Last/
+                1 FAMS @F1@
+            0 @F1@ FAM
+                1 HUSB @I2@
+                1 CHIL @I1@
+                    2 _MREL Natural
+                1 MARR
+        """
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(use_case))
+        descendant = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I1@")
+        ancestor = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I2@")
+        path = gedcom_parser.find_path_to_ancestor(descendant, ancestor)
+        self.assertEqual([descendant], path)
+
+    # TODO: FINISH developing this test.
+    @unittest.skip("Finish developing this test.")
+    def test_find_path_to_ancestor__should_create_path_when_ancestor_is_grandparent_of_descendant(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME Kid /Last/
+                1 FAMC @F1@
+            0 @I2@ INDI
+                1 NAME Dad /Last/
+                1 FAMS @F1@
+                1 FAMC @F2@
+            0 @I3@ INDI
+                1 NAME Grandpa /Last/
+                1 FAMS @F2@
+            0 @F1@ FAM
+                1 HUSB @I2@
+                1 CHIL @I1@
+                    2 _MREL Natural
+                1 MARR
+            0 @F2@ FAM
+                1 HUSB @I3@
+                1 CHIL @I2@
+                    2 _MREL Natural
+                1 MARR
+        """
+        gedcom_parser = Parser()
+        gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(use_case))
+        descendant = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I1@")
+        ancestor = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I3@")
+        path = gedcom_parser.find_path_to_ancestor(descendant, ancestor)
+
+        parents = gedcom_parser.get_parents(descendant)
+        print("parents:")
+        for parent in parents:
+            print(parent.get_pointer())
+
+        grandparents = gedcom_parser.get_parents(ancestor)
+        print("grandparents:")
+        for grandparent in grandparents:
+            print(grandparent.get_pointer())
+
+        self.assertEqual([descendant], path)
+
     # TODO: test_find_path_to_ancestor__should_create_empty_path_when_ancestor_is_not_actually_an_ancestor
 
     # ------------------------------ START OF HELPER METHODS -----------------------

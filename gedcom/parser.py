@@ -412,9 +412,9 @@ class Parser(object):
                         for child in family_member.get_child_elements():
                             if child.get_value() == "Natural":
                                 if child.get_tag() == gedcom.tags.GEDCOM_PROGRAM_DEFINED_TAG_MREL:
-                                    parents += self.get_family_members(family, gedcom.tags.GEDCOM_TAG_HUSBAND)
-                                elif child.get_tag() == gedcom.tags.GEDCOM_PROGRAM_DEFINED_TAG_FREL:
                                     parents += self.get_family_members(family, gedcom.tags.GEDCOM_TAG_WIFE)
+                                elif child.get_tag() == gedcom.tags.GEDCOM_PROGRAM_DEFINED_TAG_FREL:
+                                    parents += self.get_family_members(family, gedcom.tags.GEDCOM_TAG_HUSBAND)
             else:
                 parents += self.get_family_members(family, "PARENTS")
 
