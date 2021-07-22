@@ -353,8 +353,6 @@ class TestParser(unittest.TestCase):
         self.assertEqual("@I2@", ancestors[0].get_pointer())
         self.assertEqual("@I3@", ancestors[1].get_pointer())
 
-    # FIXME - skipped test due to underlying bug #1 - get_parent returns the wrong parent when only one is natural
-    @unittest.skip("Skipping until the underlying bug is fixed")
     def test_get_ancestors__should_return_the_persons_single_parent_if_they_do_not_have_two(self):
         use_case = """
             0 @I1@ INDI
@@ -366,7 +364,6 @@ class TestParser(unittest.TestCase):
             0 @F1@ FAM
                 1 HUSB @I2@
                 1 CHIL @I1@
-                    2 _FREL Natural
                     2 _MREL Natural
                 1 MARR
             """
@@ -374,9 +371,8 @@ class TestParser(unittest.TestCase):
         gedcom_parser.parse(self._convert_gedcom_string_into_parsable_content(use_case))
         individual = self._get_element_by_pointer(gedcom_parser.get_root_child_elements(), "@I1@")
         ancestors = gedcom_parser.get_ancestors(individual)
-        self.assertEqual(2, len(ancestors), ancestors)
+        self.assertEqual(1, len(ancestors), ancestors)
         self.assertEqual("@I2@", ancestors[0].get_pointer())
-        self.assertEqual("@I3@", ancestors[1].get_pointer())
 
     def test_get_ancestors__should_return_the_persons_parents_and_available_grandparents_if_they_have_some(self):
         use_case = """
@@ -567,8 +563,6 @@ class TestParser(unittest.TestCase):
         self.assertEqual("@I2@", parents[0].get_pointer())
         self.assertEqual("@I3@", parents[1].get_pointer())
 
-    # FIXME - skipped test due to underlying bug #1 - get_parent returns the wrong parent when only one is natural
-    @unittest.skip("Skipping until the underlying bug is fixed")
     def test_get_parents__should_handle_a_person_with_a_single_natural_female_parent_when_getting_natural_only(self):
         use_case = """
             0 @I1@ INDI
@@ -595,8 +589,6 @@ class TestParser(unittest.TestCase):
         self.assertEqual(1, len(parents), parents)
         self.assertEqual("@I3@", parents[0].get_pointer())
 
-    # FIXME - skipped test due to underlying bug #1 - get_parent returns the wrong parent when only one is natural
-    @unittest.skip("Skipping until the underlying bug is fixed")
     def test_get_parents__should_handle_a_person_with_a_single_natural_male_parent_when_getting_natural_only(self):
         use_case = """
             0 @I1@ INDI
