@@ -181,7 +181,7 @@ class Parser(object):
                     level = int(line_parts[0])
                     pointer = line_parts[1].rstrip(' ')
                     tag = line_parts[2]
-                    value = line_parts[3][1:]
+                    value = line_parts[3].strip()
                     crlf = '\n'
                 else:
                     # Quirk check - Sometimes a gedcom has a text field with a CR.
@@ -194,7 +194,7 @@ class Parser(object):
                     level = last_element.get_level()
                     tag = last_element.get_tag()
                     pointer = None
-                    value = line_parts[0][1:]
+                    value = line_parts[0].strip()
                     crlf = line_parts[1]
                     if tag != gedcom.tags.GEDCOM_TAG_CONTINUED and tag != gedcom.tags.GEDCOM_TAG_CONCATENATION:
                         # Increment level and change this line to a CONC
@@ -206,7 +206,7 @@ class Parser(object):
             level = int(line_parts[0])
             pointer = line_parts[1].rstrip(' ')
             tag = line_parts[2]
-            value = line_parts[3][1:]
+            value = line_parts[3].strip()
             crlf = line_parts[4]
 
         # Check level: should never be more than one higher than previous line.
