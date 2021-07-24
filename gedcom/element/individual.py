@@ -47,6 +47,7 @@ class IndividualElement(Element):
 
     def get_name(self):
         """Returns an individual's names as a tuple: (`str` given_name, `str` surname)
+        If this person has a suffix (e.g., 'Jr') it gets removed entirely.
         :rtype: tuple
         """
         given_name = ""

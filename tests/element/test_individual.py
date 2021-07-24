@@ -125,6 +125,14 @@ class TestIndividualElement(unittest.TestCase):
         individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
         self.assertEqual(('First', 'Last'), individual.get_name())
 
+    def test_get_name__should_remove_suffix_of_a_persons_name_when_they_have_one(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/ Jr
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertEqual(('First', 'Last'), individual.get_name())
+
     def test_get_name__should_return_full_name_of_a_person_with_a_name_tag_that_has_sub_elements_with_values(self):
         use_case = """
             0 @I1@ INDI
