@@ -1,8 +1,8 @@
-<p align="center">
-  <img src="logo.png">
+<p style="text-align:center;">
+  <img src="logo.png" alt="python-gedcom logo">
 </p>
 
-<p align="center">
+<p style="text-align:center;">
     <a href="https://pypi.org/project/python-gedcom/" target="_blank"><img src="https://img.shields.io/pypi/v/python-gedcom.svg" alt="PyPI"></a>
     <a href="https://github.com/nickreynke/python-gedcom/releases" target="_blank"><img src="https://img.shields.io/github/release/nickreynke/python-gedcom.svg" alt="GitHub release"></a>
     <a href="https://travis-ci.org/nickreynke/python-gedcom" target="_blank"><img src="https://travis-ci.org/nickreynke/python-gedcom.svg?branch=master" alt="Build Status"></a>
@@ -10,11 +10,11 @@
     <img src="https://img.shields.io/badge/Python%20versions-3.5%20to%203.8-yellowgreen.svg" alt="Python versions 3.5 to 3.8">
 </p>
 
-<p align="center">
+<p style="text-align:center;">
     A Python module for parsing, analyzing, and manipulating GEDCOM files.
 </p>
 
-<p align="center">
+<p style="text-align:center;">
     GEDCOM files contain ancestry data. The parser is currently supporting the GEDCOM 5.5 format which is detailed
     <a href="https://chronoplexsoftware.com/gedcomvalidator/gedcom/gedcom-5.5.pdf" target="_blank">here</a>.
 </p>
@@ -77,6 +77,8 @@ was licensed under the GPL v2 and then continued by
 
 The project was taken over by [Nicklas Reincke](https://github.com/nickreynke) in 2018.
 Together with [Damon Brodie](https://github.com/nomadyow) a lot of changes were made and the parser was optimized.
+
+It has most recently been forked by [Pat Swanson](https://github.com/swanny0819) in 2021.
 
 ## License
 

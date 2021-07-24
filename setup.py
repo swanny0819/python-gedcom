@@ -14,9 +14,9 @@ setup(
     description='A Python module for parsing, analyzing, and manipulating GEDCOM files.',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/nickreynke/python-gedcom',
-    author='Nicklas Reincke',
-    author_email='contact@reynke.com',
+    url='https://github.com/swanny0819/python-gedcom',
+    author='Patrick Swanson',
+    author_email='patswanson+python_gedcom@gmail.com',
     license='GPLv2',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
@@ -39,7 +39,7 @@ setup(
     package_data={},
     data_files=[],
     project_urls={
-        'Bug Reports': 'https://github.com/nickreynke/python-gedcom/issues',
-        'Source': 'https://github.com/nickreynke/python-gedcom',
+        'Bug Reports': 'https://github.com/swanny0819/python-gedcom/issues',
+        'Source': 'https://github.com/swanny0819/python-gedcom',
     },
 )
