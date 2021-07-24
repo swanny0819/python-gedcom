@@ -183,15 +183,15 @@ class Element(object):
         from gedcom.element.individual import IndividualElement
         from gedcom.element.object import ObjectElement
 
-        # Differentiate between the type of the new child element
-        if tag == gedcom.tags.GEDCOM_TAG_FAMILY:
-            child_element = FamilyElement(self.get_level() + 1, pointer, tag, value, self.__crlf)
-        elif tag == gedcom.tags.GEDCOM_TAG_FILE:
-            child_element = FileElement(self.get_level() + 1, pointer, tag, value, self.__crlf)
-        elif tag == gedcom.tags.GEDCOM_TAG_INDIVIDUAL:
-            child_element = IndividualElement(self.get_level() + 1, pointer, tag, value, self.__crlf)
-        elif tag == gedcom.tags.GEDCOM_TAG_OBJECT:
-            child_element = ObjectElement(self.get_level() + 1, pointer, tag, value, self.__crlf)
+        tag_element_dict = {
+            gedcom.tags.GEDCOM_TAG_FAMILY: FamilyElement,
+            gedcom.tags.GEDCOM_TAG_FILE: FileElement,
+            gedcom.tags.GEDCOM_TAG_INDIVIDUAL: IndividualElement,
+            gedcom.tags.GEDCOM_TAG_OBJECT: ObjectElement,
+        }
+
+        if tag in tag_element_dict:
+            child_element = tag_element_dict[tag](self.get_level() + 1, pointer, tag, value, self.__crlf)
         else:
             child_element = Element(self.get_level() + 1, pointer, tag, value, self.__crlf)
 
