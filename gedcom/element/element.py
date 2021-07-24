@@ -151,8 +151,8 @@ class Element(object):
         :type value: str
         """
         self.set_value('')
-        self.get_child_elements()[:] = [child for child in self.get_child_elements() if
-                                        child.get_tag() not in (gedcom.tags.GEDCOM_TAG_CONCATENATION, gedcom.tags.GEDCOM_TAG_CONTINUED)]
+        self.__children = [child for child in self.get_child_elements() if
+                           child.get_tag() not in (gedcom.tags.GEDCOM_TAG_CONCATENATION, gedcom.tags.GEDCOM_TAG_CONTINUED)]
 
         lines = value.splitlines()
         if lines:
