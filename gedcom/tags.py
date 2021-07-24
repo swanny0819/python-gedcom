@@ -874,4 +874,3 @@ GEDCOM_TAG_WILL = "WILL"
 A legal document treated as an event, by which a person disposes of his or her estate, to take effect after 
 death. The event date is the date the will was signed while the person was alive. (See also PROBate)
 """
-
