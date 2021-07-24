@@ -19,23 +19,19 @@ class IndividualElement(Element):
         """Checks if this individual is deceased
         :rtype: bool
         """
-        for child in self.get_child_elements():
-            if child.get_tag() == gedcom.tags.GEDCOM_TAG_DEATH:
-                return True
-
-        return False
+        return self._is_tag_present(gedcom.tags.GEDCOM_TAG_DEATH)
 
     def is_child(self):
         """Checks if this element is a child of a family
         :rtype: bool
         """
-        found_child = False
+        return self._is_tag_present(gedcom.tags.GEDCOM_TAG_FAMILY_CHILD)
 
-        for child in self.get_child_elements():
-            if child.get_tag() == gedcom.tags.GEDCOM_TAG_FAMILY_CHILD:
-                found_child = True
-
-        return found_child
+    def is_spouse(self):
+        """Checks if this element is a spouse in a family
+        :rtype: bool
+        """
+        return self._is_tag_present(gedcom.tags.GEDCOM_TAG_FAMILY_SPOUSE)
 
     def is_private(self):
         """Checks if this individual is marked private

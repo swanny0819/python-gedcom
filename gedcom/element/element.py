@@ -225,6 +225,12 @@ class Element(object):
         """
         self.__parent = element
 
+    def _is_tag_present(self, tag):
+        for child in self.get_child_elements():
+            if child.get_tag() == tag:
+                return True
+        return False
+
     @deprecated
     def get_individual(self):
         """Returns this element and all of its sub-elements represented as a GEDCOM string

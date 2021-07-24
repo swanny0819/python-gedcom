@@ -59,6 +59,34 @@ class TestIndividualElement(unittest.TestCase):
         individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
         self.assertTrue(individual.is_child())
 
+    # --------------------- START OF is_spouse TESTING -----------------------
+
+    def test_is_spouse__a_person_not_in_a_family_is_not_a_spouse(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertFalse(individual.is_spouse())
+
+    def test_is_spouse__a_person_in_a_family_but_only_as_a_child_is_not_a_spouse(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+                1 FAMC @F1@
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertFalse(individual.is_spouse())
+
+    def test_is_spouse__a_person_in_a_family_and_as_a_spouse_is_a_spouse(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+                1 FAMS @F1@
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertTrue(individual.is_spouse())
+
     # --------------------- START OF is_private TESTING -----------------------
 
     def test_is_private__a_person_not_marked_private_is_not_private(self):
