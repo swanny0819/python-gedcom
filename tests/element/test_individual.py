@@ -814,14 +814,10 @@ class TestIndividualElement(unittest.TestCase):
         individual = self._parse_use_case_and_get_individual_element(self._criteria_match_use_case, "@I1@")
         self.assertTrue(individual.criteria_match("name=First:surname=Last"))
 
-    # FIXME: Bug #4
-    @unittest.skip("Bug #4: Improve the criteria checking before re-enabling")
     def test_criteria_match__should_not_match_when_single_criterion_is_missing_a_separator(self):
         individual = self._parse_use_case_and_get_individual_element(self._criteria_match_use_case, "@I1@")
         self.assertFalse(individual.criteria_match("nameFirst"))
 
-    # FIXME: Bug #4
-    @unittest.skip("Bug #4: Improve the criteria checking before re-enabling")
     def test_criteria_match__should_not_match_when_multiple_criteria_and_one__is_missing_a_separator(self):
         individual = self._parse_use_case_and_get_individual_element(self._criteria_match_use_case, "@I1@")
         self.assertFalse(individual.criteria_match("name=First:surnameLast"))

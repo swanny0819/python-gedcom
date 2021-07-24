@@ -131,16 +131,13 @@ class IndividualElement(Element):
 
         return gender
 
-    def get_birth_data(self):
-        """Returns the birth data of a person formatted as a tuple: (`str` date, `str` place, `list` sources)
-        :rtype: tuple
-        """
+    def __get_data_for_date_bearing_tag(self, tag):
         date = ""
         place = ""
         sources = []
 
         for child in self.get_child_elements():
-            if child.get_tag() == gedcom.tags.GEDCOM_TAG_BIRTH:
+            if child.get_tag() == tag:
                 for childOfChild in child.get_child_elements():
 
                     if childOfChild.get_tag() == gedcom.tags.GEDCOM_TAG_DATE:
@@ -153,26 +150,18 @@ class IndividualElement(Element):
                         sources.append(childOfChild.get_value())
 
         return date, place, sources
+
+    def get_birth_data(self):
+        """Returns the birth data of a person formatted as a tuple: (`str` date, `str` place, `list` sources)
+        :rtype: tuple
+        """
+        return self.__get_data_for_date_bearing_tag(gedcom.tags.GEDCOM_TAG_BIRTH)
 
     def get_death_data(self):
         """Returns the death data of a person formatted as a tuple: (`str` date, `str` place, `list` sources)
         :rtype: tuple
         """
-        date = ""
-        place = ""
-        sources = []
-
-        for child in self.get_child_elements():
-            if child.get_tag() == gedcom.tags.GEDCOM_TAG_DEATH:
-                for childOfChild in child.get_child_elements():
-                    if childOfChild.get_tag() == gedcom.tags.GEDCOM_TAG_DATE:
-                        date = childOfChild.get_value()
-                    if childOfChild.get_tag() == gedcom.tags.GEDCOM_TAG_PLACE:
-                        place = childOfChild.get_value()
-                    if childOfChild.get_tag() == gedcom.tags.GEDCOM_TAG_SOURCE:
-                        sources.append(childOfChild.get_value())
-
-        return date, place, sources
+        return self.__get_data_for_date_bearing_tag(gedcom.tags.GEDCOM_TAG_DEATH)
 
     def __get_year_in_tag_type(self, tag):
         date = ""
@@ -215,24 +204,7 @@ class IndividualElement(Element):
         """Returns the burial data of a person formatted as a tuple: (`str` date, `str´ place, `list` sources)
         :rtype: tuple
         """
-        date = ""
-        place = ""
-        sources = []
-
-        for child in self.get_child_elements():
-            if child.get_tag() == gedcom.tags.GEDCOM_TAG_BURIAL:
-                for childOfChild in child.get_child_elements():
-
-                    if childOfChild.get_tag() == gedcom.tags.GEDCOM_TAG_DATE:
-                        date = childOfChild.get_value()
-
-                    if childOfChild.get_tag() == gedcom.tags.GEDCOM_TAG_PLACE:
-                        place = childOfChild.get_value()
-
-                    if childOfChild.get_tag() == gedcom.tags.GEDCOM_TAG_SOURCE:
-                        sources.append(childOfChild.get_value())
-
-        return date, place, sources
+        return self.__get_data_for_date_bearing_tag(gedcom.tags.GEDCOM_TAG_BURIAL)
 
     @deprecated
     def get_census(self):
@@ -351,19 +323,26 @@ class IndividualElement(Element):
         birth_range=[from_year-to_year]
              Match a person whose birth year is in the range of years from
              [from_year] to [to_year], including both [from_year] and [to_year].
+        death=[year]
+             Match a person whose death year is a four-digit [year].
+        death_range=[from_year-to_year]
+             Match a person whose death year is in the range of years from
+             [from_year] to [to_year], including both [from_year] and [to_year].
 
         :type criteria: str
         :rtype: bool
         """
 
-        # Check if criteria is a valid criteria and can be split by `:` and `=` characters
-        try:
-            for criterion in criteria.split(':'):
-                criterion.split('=')
-        except ValueError:
-            return False
-
         match = True
+
+        # Check if criteria is a valid criteria and can be split by `:` and `=` characters
+        if ":" in criteria:
+            for criterion in criteria.split(':'):
+                if "=" not in criterion:
+                    return False
+        else:
+            if "=" not in criteria:
+                return False
 
         for criterion in criteria.split(':'):
             key, value = criterion.split('=')
