@@ -150,6 +150,21 @@ class TestIndividualElement(unittest.TestCase):
         individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
         self.assertEqual(('', ''), individual.get_name())
 
+    # --------------------- START OF get_all_names TESTING -----------------------
+
+    def test_get_all_names__should_be_able_to_match_multiple_names_but_not_non_names(self):
+        element = IndividualElement(level=0, pointer="@I5@", tag="INDI", value="")
+        element.new_child_element(tag="NAME", value="First /Last/")
+        element.new_child_element(tag="SEX", value="M")
+        birth = element.new_child_element(tag="BIRT", value="")
+        birth.new_child_element(tag="DATE", value="1 JAN 1900")
+        element.new_child_element(tag="NAME", value="Second /Surname/")
+
+        all_names = element.get_all_names()
+        self.assertEqual(2, len(all_names))
+        self.assertEqual('First /Last/', all_names[0])
+        self.assertEqual('Second /Surname/', all_names[1])
+
     # --------------------- START OF surname_match TESTING -----------------------
 
     def test_surname_match__should_match_exactly_a_surname(self):
@@ -223,7 +238,139 @@ class TestIndividualElement(unittest.TestCase):
 
     # --------------------- START OF get_birth_data TESTING -----------------------
 
-    # TODO: Test get_birth_data
+    def test_get_birth_data__should_return_an_empty_tuple_if_no_such_data_is_present(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+                1 SEX M
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertEqual(("", "", []), individual.get_birth_data())
+
+    def test_get_birth_data__should_return_a_single_tuple_when_there_is_just_a_date(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+                1 BIRT
+                    2 DATE JUN 1990
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertEqual(("JUN 1990", "", []), individual.get_birth_data())
+
+    def test_get_birth_data__should_return_a_single_tuple_when_there_is_just_a_place(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+                1 BIRT
+                    2 PLAC Chicago
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertEqual(("", "Chicago", []), individual.get_birth_data())
+
+    def test_get_birth_data__should_return_a_single_tuple_when_there_is_just_a_source(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+                1 BIRT
+                    2 SOUR @S1@
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertEqual(("", "", ["@S1@"]), individual.get_birth_data())
+
+    def test_get_birth_data__should_return_a_single_full_tuple_when_there_is_a_date_place_and_multiple_sources(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+                1 BIRT
+                    2 DATE APR 2001
+                    2 PLAC New York
+                    2 SOUR @S1@
+                    2 SOUR @S2@
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertEqual(("APR 2001", "New York", ["@S1@", "@S2@"]), individual.get_birth_data())
+
+    def test_get_birth_data__should_return_a_combination_of_fields_in_a_tuple_when_there_are_multiple_partials(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+                1 BIRT
+                    2 DATE APR 2001
+                1 BIRT
+                    2 PLAC New York
+                1 BIRT
+                    2 SOUR @S1@
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertEqual(("APR 2001", "New York", ["@S1@"]), individual.get_birth_data())
+
+    # --------------------- START OF get_death_data TESTING -----------------------
+
+    def test_get_death_data__should_return_an_empty_tuple_if_no_such_data_is_present(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+                1 SEX M
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertEqual(("", "", []), individual.get_death_data())
+
+    def test_get_death_data__should_return_a_single_tuple_when_there_is_just_a_date(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+                1 DEAT
+                    2 DATE JUN 1990
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertEqual(("JUN 1990", "", []), individual.get_death_data())
+
+    def test_get_death_data__should_return_a_single_tuple_when_there_is_just_a_place(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+                1 DEAT
+                    2 PLAC Chicago
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertEqual(("", "Chicago", []), individual.get_death_data())
+
+    def test_get_death_data__should_return_a_single_tuple_when_there_is_just_a_source(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+                1 DEAT
+                    2 SOUR @S1@
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertEqual(("", "", ["@S1@"]), individual.get_death_data())
+
+    def test_get_death_data__should_return_a_single_full_tuple_when_there_is_a_date_place_and_multiple_sources(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+                1 DEAT
+                    2 DATE APR 2001
+                    2 PLAC New York
+                    2 SOUR @S1@
+                    2 SOUR @S2@
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertEqual(("APR 2001", "New York", ["@S1@", "@S2@"]), individual.get_death_data())
+
+    def test_get_death_data__should_return_a_combination_of_fields_in_a_tuple_when_there_are_multiple_partials(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+                1 DEAT
+                    2 DATE APR 2001
+                1 DEAT
+                    2 PLAC New York
+                1 DEAT
+                    2 SOUR @S1@
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertEqual(("APR 2001", "New York", ["@S1@"]), individual.get_death_data())
 
     # --------------------- START OF get_birth_year TESTING -----------------------
 
@@ -276,10 +423,6 @@ class TestIndividualElement(unittest.TestCase):
         individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
         self.assertEqual(-1, individual.get_birth_year())
 
-    # --------------------- START OF get_death_data TESTING -----------------------
-
-    # TODO: Test get_death_data
-    
     # --------------------- START OF get_death_year TESTING -----------------------
 
     def test_get_death_year__should_remove_about_string_from_a_year(self):
@@ -331,32 +474,357 @@ class TestIndividualElement(unittest.TestCase):
         individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
         self.assertEqual(-1, individual.get_death_year())
 
-    # TODO: Test get_burial_data
+    # --------------------- START OF get_burial_data TESTING -----------------------
 
-    # TODO: Test get_census_data
+    def test_get_burial_data__should_return_an_empty_tuple_if_no_such_data_is_present(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+                1 SEX M
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertEqual(("", "", []), individual.get_burial_data())
 
-    # TODO: Test get_last_change_date
-    # TODO: Test get_occupation
-    # TODO: Test birth_year_match
-    # TODO: Test birth_range_match
-    # TODO: Test death_year_match
-    # TODO: Test death_range_match
-    # TODO: Test criteria_match
+    def test_get_burial_data__should_return_a_single_tuple_when_there_is_just_a_date(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+                1 BURI
+                    2 DATE JUN 1990
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertEqual(("JUN 1990", "", []), individual.get_burial_data())
 
-    # --------------------- START OF get_all_names TESTING -----------------------
+    def test_get_burial_data__should_return_a_single_tuple_when_there_is_just_a_place(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+                1 BURI
+                    2 PLAC Chicago
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertEqual(("", "Chicago", []), individual.get_burial_data())
 
-    def test_get_all_names__should_be_able_to_match_multiple_names_but_not_non_names(self):
-        element = IndividualElement(level=0, pointer="@I5@", tag="INDI", value="")
-        element.new_child_element(tag="NAME", value="First /Last/")
-        element.new_child_element(tag="SEX", value="M")
-        birth = element.new_child_element(tag="BIRT", value="")
-        birth.new_child_element(tag="DATE", value="1 JAN 1900")
-        element.new_child_element(tag="NAME", value="Second /Surname/")
+    def test_get_burial_data__should_return_a_single_tuple_when_there_is_just_a_source(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+                1 BURI
+                    2 SOUR @S1@
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertEqual(("", "", ["@S1@"]), individual.get_burial_data())
 
-        all_names = element.get_all_names()
-        self.assertEqual(2, len(all_names))
-        self.assertEqual('First /Last/', all_names[0])
-        self.assertEqual('Second /Surname/', all_names[1])
+    def test_get_burial_data__should_return_a_single_full_tuple_when_there_is_a_date_place_and_multiple_sources(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+                1 BURI
+                    2 DATE APR 2001
+                    2 PLAC New York
+                    2 SOUR @S1@
+                    2 SOUR @S2@
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertEqual(("APR 2001", "New York", ["@S1@", "@S2@"]), individual.get_burial_data())
+
+    def test_get_burial_data__should_return_a_combination_of_fields_in_a_tuple_when_there_are_multiple_partials(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+                1 BURI
+                    2 DATE APR 2001
+                1 BURI
+                    2 PLAC New York
+                1 BURI
+                    2 SOUR @S1@
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertEqual(("APR 2001", "New York", ["@S1@"]), individual.get_burial_data())
+
+    # --------------------- START OF get_census_data TESTING -----------------------
+
+    def test_get_census_data__should_return_an_empty_list_if_no_such_data_is_present(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+                1 SEX M
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertEqual([], individual.get_census_data())
+
+    def test_get_census_data__should_return_a_list_containing_a_single_tuple_when_there_is_just_a_date(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+                1 CENS
+                    2 DATE JUN 1990
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertEqual([("JUN 1990", "", [])], individual.get_census_data())
+
+    def test_get_census_data__should_return_a_list_containing_a_single_tuple_when_there_is_just_a_place(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+                1 CENS
+                    2 PLAC Chicago
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertEqual([("", "Chicago", [])], individual.get_census_data())
+
+    def test_get_census_data__should_return_a_list_containing_a_single_tuple_when_there_is_just_a_source(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+                1 CENS
+                    2 SOUR @S1@
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertEqual([("", "", ["@S1@"])], individual.get_census_data())
+
+    def test_get_census_data__should_return_a_list_containing_a_single_full_tuple_when_there_is_a_date_place_and_multiple_sources(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+                1 CENS
+                    2 DATE APR 2001
+                    2 PLAC New York
+                    2 SOUR @S1@
+                    2 SOUR @S2@
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertEqual([("APR 2001", "New York", ["@S1@", "@S2@"])], individual.get_census_data())
+
+    def test_get_census_data__should_return_separate_tuples_when_there_are_multiple_partials(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+                1 CENS
+                    2 DATE APR 2001
+                1 CENS
+                    2 PLAC New York
+                1 CENS
+                    2 SOUR @S1@
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertEqual([("APR 2001", "", []), ("", "New York", []), ("", "", ["@S1@"])], individual.get_census_data())
+
+    # --------------------- START OF get_last_change_date TESTING -----------------------
+
+    def test_get_last_change_date__should_return_empty_string_if_there_is_no_last_change_date(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertEqual("", individual.get_last_change_date())
+
+    def test_get_last_change_date__should_return_the_date_if_there_is_a_last_change_date(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+                1 CHAN
+                    2 DATE Jun 1990
+                    2 SOUR @S1@
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertEqual("Jun 1990", individual.get_last_change_date())
+
+    # --------------------- START OF get_occupation TESTING -----------------------
+
+    def test_get_occupation__should_return_empty_string_if_there_is_no_occupation(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertEqual("", individual.get_occupation())
+
+    def test_get_occupation__should_return_the_occupation_if_there_is_one(self):
+        use_case = """
+            0 @I1@ INDI
+                1 NAME First /Last/
+                1 OCCU Plumber
+                1 SEX M
+        """
+        individual = self._parse_use_case_and_get_individual_element(use_case, "@I1@")
+        self.assertEqual("Plumber", individual.get_occupation())
+
+    # --------------------- START OF birth_year_match TESTING -----------------------
+
+    _birth_year_match_use_case = """
+        0 @I1@ INDI
+            1 NAME First /Last/
+            1 BIRT
+                2 DATE April 1 1990
+    """
+
+    def test_birth_year_match__should_return_true_if_the_year_matches(self):
+        individual = self._parse_use_case_and_get_individual_element(self._birth_year_match_use_case, "@I1@")
+        self.assertTrue(individual.birth_year_match(1990))
+
+    def test_birth_year_match__should_return_false_if_the_year_does_not_match(self):
+        individual = self._parse_use_case_and_get_individual_element(self._birth_year_match_use_case, "@I1@")
+        self.assertFalse(individual.birth_year_match(1800))
+
+    # --------------------- START OF birth_range_match TESTING -----------------------
+
+    _birth_range_match_use_case = """
+        0 @I1@ INDI
+            1 NAME First /Last/
+            1 BIRT
+                2 DATE April 1 1990
+    """
+
+    def test_birth_year_match__should_return_false_if_the_year_is_before_the_range(self):
+        individual = self._parse_use_case_and_get_individual_element(self._birth_range_match_use_case, "@I1@")
+        self.assertFalse(individual.birth_range_match(2000, 2100))
+
+    def test_birth_year_match__should_return_true_if_the_year_is_in_the_range(self):
+        individual = self._parse_use_case_and_get_individual_element(self._birth_range_match_use_case, "@I1@")
+        self.assertTrue(individual.birth_range_match(1900, 2000))
+
+    def test_birth_year_match__should_return_false_if_the_year_is_after_the_range(self):
+        individual = self._parse_use_case_and_get_individual_element(self._birth_range_match_use_case, "@I1@")
+        self.assertFalse(individual.birth_range_match(1800, 1900))
+
+    # --------------------- START OF death_year_match TESTING -----------------------
+
+    _death_year_match_use_case = """
+        0 @I1@ INDI
+            1 NAME First /Last/
+            1 DEAT
+                2 DATE April 1 1990
+    """
+
+    def test_death_year_match__should_return_true_if_the_year_matches(self):
+        individual = self._parse_use_case_and_get_individual_element(self._death_year_match_use_case, "@I1@")
+        self.assertTrue(individual.death_year_match(1990))
+
+    def test_death_year_match__should_return_false_if_the_year_does_not_match(self):
+        individual = self._parse_use_case_and_get_individual_element(self._death_year_match_use_case, "@I1@")
+        self.assertFalse(individual.death_year_match(1800))
+
+    # --------------------- START OF death_range_match TESTING -----------------------
+
+    _death_range_match_use_case = """
+        0 @I1@ INDI
+            1 NAME First /Last/
+            1 DEAT
+                2 DATE April 1 1990
+    """
+
+    def test_death_year_match__should_return_false_if_the_year_is_before_the_range(self):
+        individual = self._parse_use_case_and_get_individual_element(self._death_range_match_use_case, "@I1@")
+        self.assertFalse(individual.death_range_match(2000, 2100))
+
+    def test_death_year_match__should_return_true_if_the_year_is_in_the_range(self):
+        individual = self._parse_use_case_and_get_individual_element(self._death_range_match_use_case, "@I1@")
+        self.assertTrue(individual.death_range_match(1900, 2000))
+
+    def test_death_year_match__should_return_false_if_the_year_is_after_the_range(self):
+        individual = self._parse_use_case_and_get_individual_element(self._death_range_match_use_case, "@I1@")
+        self.assertFalse(individual.death_range_match(1800, 1900))
+
+    # --------------------- START OF criteria_match TESTING -----------------------
+
+    _criteria_match_use_case = """
+        0 @I1@ INDI
+            1 NAME First /Last/
+            1 BIRT
+                2 DATE April 1 1990
+            1 DEAT
+                2 DATE Jun 21 1999
+    """
+
+    def test_criteria_match__should_match_on_matching_surname(self):
+        individual = self._parse_use_case_and_get_individual_element(self._criteria_match_use_case, "@I1@")
+        self.assertTrue(individual.criteria_match("surname=Last"))
+
+    def test_criteria_match__should_fail_to_match_on_matching_surname(self):
+        individual = self._parse_use_case_and_get_individual_element(self._criteria_match_use_case, "@I1@")
+        self.assertFalse(individual.criteria_match("surname=NotAMatch"))
+
+    def test_criteria_match__should_match_on_matching_given_name(self):
+        individual = self._parse_use_case_and_get_individual_element(self._criteria_match_use_case, "@I1@")
+        self.assertTrue(individual.criteria_match("name=First"))
+
+    def test_criteria_match__should_fail_to_match_on_matching_given_name(self):
+        individual = self._parse_use_case_and_get_individual_element(self._criteria_match_use_case, "@I1@")
+        self.assertFalse(individual.criteria_match("name=NotAMatch"))
+
+    def test_criteria_match__should_match_on_matching_birth_year(self):
+        individual = self._parse_use_case_and_get_individual_element(self._criteria_match_use_case, "@I1@")
+        self.assertTrue(individual.criteria_match("birth=1990"))
+
+    def test_criteria_match__should_fail_to_match_on_matching_birth_year(self):
+        individual = self._parse_use_case_and_get_individual_element(self._criteria_match_use_case, "@I1@")
+        self.assertFalse(individual.criteria_match("birth=2127"))
+
+    def test_criteria_match__should_fail_to_match_when_the_provided_birth_year_is_not_numeric(self):
+        individual = self._parse_use_case_and_get_individual_element(self._criteria_match_use_case, "@I1@")
+        self.assertFalse(individual.criteria_match("birth=not_a_number"))
+
+    def test_criteria_match__should_match_on_matching_birth_range(self):
+        individual = self._parse_use_case_and_get_individual_element(self._criteria_match_use_case, "@I1@")
+        self.assertTrue(individual.criteria_match("birth_range=1900-2000"))
+
+    def test_criteria_match__should_fail_to_match_on_non_matching_birth_range(self):
+        individual = self._parse_use_case_and_get_individual_element(self._criteria_match_use_case, "@I1@")
+        self.assertFalse(individual.criteria_match("birth_range=2000-2100"))
+
+    def test_criteria_match__should_fail_to_match_when_the_provided_birth_year_range_is_not_numeric(self):
+        individual = self._parse_use_case_and_get_individual_element(self._criteria_match_use_case, "@I1@")
+        self.assertFalse(individual.criteria_match("birth_range=1900-not_a_number"))
+
+    def test_criteria_match__should_fail_to_match_when_the_provided_birth_year_range_does_not_have_a_separator(self):
+        individual = self._parse_use_case_and_get_individual_element(self._criteria_match_use_case, "@I1@")
+        self.assertFalse(individual.criteria_match("birth_range=not_a_number"))
+
+    def test_criteria_match__should_match_on_matching_death_year(self):
+        individual = self._parse_use_case_and_get_individual_element(self._criteria_match_use_case, "@I1@")
+        self.assertTrue(individual.criteria_match("death=1999"))
+
+    def test_criteria_match__should_fail_to_match_on_matching_death_year(self):
+        individual = self._parse_use_case_and_get_individual_element(self._criteria_match_use_case, "@I1@")
+        self.assertFalse(individual.criteria_match("death=2127"))
+
+    def test_criteria_match__should_fail_to_match_when_the_provided_death_year_is_not_numeric(self):
+        individual = self._parse_use_case_and_get_individual_element(self._criteria_match_use_case, "@I1@")
+        self.assertFalse(individual.criteria_match("death=not_a_number"))
+
+    def test_criteria_match__should_match_on_matching_death_range(self):
+        individual = self._parse_use_case_and_get_individual_element(self._criteria_match_use_case, "@I1@")
+        self.assertTrue(individual.criteria_match("death_range=1900-2000"))
+
+    def test_criteria_match__should_fail_to_match_on_non_matching_death_range(self):
+        individual = self._parse_use_case_and_get_individual_element(self._criteria_match_use_case, "@I1@")
+        self.assertFalse(individual.criteria_match("death_range=2000-2100"))
+
+    def test_criteria_match__should_fail_to_match_when_the_provided_death_year_range_is_not_numeric(self):
+        individual = self._parse_use_case_and_get_individual_element(self._criteria_match_use_case, "@I1@")
+        self.assertFalse(individual.criteria_match("death_range=1900-not_a_number"))
+
+    def test_criteria_match__should_fail_to_match_when_the_provided_death_year_range_does_not_have_a_separator(self):
+        individual = self._parse_use_case_and_get_individual_element(self._criteria_match_use_case, "@I1@")
+        self.assertFalse(individual.criteria_match("death_range=not_a_number"))
+
+    def test_criteria_match__should_match_on_multiple_criteria(self):
+        individual = self._parse_use_case_and_get_individual_element(self._criteria_match_use_case, "@I1@")
+        self.assertTrue(individual.criteria_match("name=First:surname=Last"))
+
+    # FIXME: Bug #4
+    @unittest.skip("Bug #4: Improve the criteria checking before re-enabling")
+    def test_criteria_match__should_not_match_when_single_criterion_is_missing_a_separator(self):
+        individual = self._parse_use_case_and_get_individual_element(self._criteria_match_use_case, "@I1@")
+        self.assertFalse(individual.criteria_match("nameFirst"))
+
+    # FIXME: Bug #4
+    @unittest.skip("Bug #4: Improve the criteria checking before re-enabling")
+    def test_criteria_match__should_not_match_when_multiple_criteria_and_one__is_missing_a_separator(self):
+        individual = self._parse_use_case_and_get_individual_element(self._criteria_match_use_case, "@I1@")
+        self.assertFalse(individual.criteria_match("name=First:surnameLast"))
 
     # ------------------------------ START OF HELPER METHODS -----------------------
 
