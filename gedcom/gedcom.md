@@ -3,7 +3,7 @@
 The module can be installed via [pipenv](https://github.com/pypa/pipenv) or simply [pip](https://pip.pypa.io/).
 
 Run `pip3 install python-gedcom` to install or `pip3 install python-gedcom --upgrade`
-to upgrade to the newest version uploaded to the [PyPI repository](https://pypi.org/project/python-gedcom/).
+to upgrade to the newest version uploaded to the [PyPI repository](https://pypi.org/project/python-gedcom2/).
 
 .. tip::
    Using [pipenv](https://github.com/pypa/pipenv) simplifies the installation and maintenance of dependencies.
@@ -56,7 +56,7 @@ for element in root_child_elements:
 
 .. tip::
    Please have a look at the test files found in the 
-   [`tests/` directory in the source code on GitHub](https://github.com/nickreynke/python-gedcom/tree/master/tests).
+   [`tests/` directory in the source code on GitHub](https://github.com/swanny0819/python-gedcom/tree/master/tests).
 
 ## Strict parsing
 
@@ -76,29 +76,3 @@ Disabling strict parsing will allow the parser to gracefully handle the followin
 
 - Multi-line fields that don't use `CONC` or `CONT`
 - Handle the last line not ending in a CRLF (`\r\n`)
-
-## License
-
-Licensed under the [GNU General Public License v2](http://www.gnu.org/licenses/gpl-2.0.html)
-
-**Python GEDCOM Parser**
-<br>Copyright (C) 2018 Damon Brodie (damon.brodie at gmail.com)
-<br>Copyright (C) 2018-2019 Nicklas Reincke (contact at reynke.com)
-<br>Copyright (C) 2016 Andreas Oberritter
-<br>Copyright (C) 2012 Madeleine Price Ball
-<br>Copyright (C) 2005 Daniel Zappala (zappala at cs.byu.edu)
-<br>Copyright (C) 2005 Brigham Young University
-
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along
-with this program; if not, write to the Free Software Foundation, Inc.,
-51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
