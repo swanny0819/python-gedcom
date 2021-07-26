@@ -26,8 +26,6 @@ Documentation can be found here: https://nickreynke.github.io/python-gedcom/gedc
 
 For the latest changes please have a look at the [`CHANGELOG.md`](CHANGELOG.md) file.
 
-The current development process can be tracked in the [develop branch](https://github.com/nickreynke/python-gedcom/tree/develop).
-
 ## Common problems
 
 * When you name your script `gedcom.py`, and import the `gedcom` module from this package, running your script won't
