@@ -3,8 +3,7 @@
 </p>
 
 <p style="text-align:center;">
-    <a href="https://pypi.org/project/python-gedcom/" target="_blank"><img src="https://img.shields.io/pypi/v/python-gedcom.svg" alt="PyPI"></a>
-    <a href="https://github.com/nickreynke/python-gedcom/releases" target="_blank"><img src="https://img.shields.io/github/release/nickreynke/python-gedcom.svg" alt="GitHub release"></a>
+    <a href="https://pypi.org/project/python-gedcom2/" target="_blank"><img src="https://img.shields.io/badge/Pypi%20version-1.0.0-blue.svg" alt="PyPI"></a>
     <img src="https://img.shields.io/badge/GEDCOM%20format%20version-5.5-yellowgreen.svg" alt="GEDCOM format version 5.5">
     <img src="https://img.shields.io/badge/Python%20versions-3.5%20to%203.9-yellowgreen.svg" alt="Python versions 3.5 to 3.9">
 </p>
@@ -20,7 +19,7 @@
 
 ## Documentation
 
-Documentation can be found here: https://nickreynke.github.io/python-gedcom/gedcom/index.html
+Documentation can be found here: https://swanny0819.github.io/python-gedcom-2/gedcom/index.html
 
 ## Changelog
 
@@ -44,7 +43,7 @@ Local development is done using [pyenv](https://github.com/pyenv/pyenv) and
     * For Python 3.5 run `pipenv run tox -e py35` (you need to have Python 3.5 installed)
     * For Python 3.6 run `pipenv run tox -e py36` (you need to have Python 3.6 installed)
     * For Python 3.7 run `pipenv run tox -e py37` (you need to have Python 3.7 installed)
-   * For Python 3.8 run `pipenv run tox -e py38` (you need to have Python 3.8 installed)
+    * For Python 3.8 run `pipenv run tox -e py38` (you need to have Python 3.8 installed)
 
 ### Generating docs
 

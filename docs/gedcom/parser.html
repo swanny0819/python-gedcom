@@ -54,6 +54,9 @@ FAMILY_MEMBERS_TYPE_WIFE = gedcom.tags.GEDCOM_TAG_WIFE
 class GedcomFormatViolationError(Exception):
     pass
 
+class PointerNotFoundException(Exception):
+    pass
+
 
 class Parser(object):
     &#34;&#34;&#34;Parses and manipulates GEDCOM 5.5 format data
@@ -81,6 +84,17 @@ class Parser(object):
         &#34;&#34;&#34;
         self.__element_list = []
         self.__element_dictionary = {}
+
+    def get_element_by_pointer(self, pointer):
+        &#34;&#34;&#34;Returns the element that has the provided pointer. Raises an exception if that pointer doesn&#39;t exist.
+        :type pointer: string
+        :rtype: Element
+        &#34;&#34;&#34;
+        element_dictionary = self.get_element_dictionary()
+        if pointer not in element_dictionary:
+            raise PointerNotFoundException(&#34;No element with the pointer &#34; + pointer + &#34; was found.&#34;)
+        else:
+            return element_dictionary[pointer]
 
     def get_element_list(self):
         &#34;&#34;&#34;Returns a list containing all elements from within the GEDCOM file
@@ -605,6 +619,17 @@ class Parser(object):
         &#34;&#34;&#34;
         self.__element_list = []
         self.__element_dictionary = {}
+
+    def get_element_by_pointer(self, pointer):
+        &#34;&#34;&#34;Returns the element that has the provided pointer. Raises an exception if that pointer doesn&#39;t exist.
+        :type pointer: string
+        :rtype: Element
+        &#34;&#34;&#34;
+        element_dictionary = self.get_element_dictionary()
+        if pointer not in element_dictionary:
+            raise PointerNotFoundException(&#34;No element with the pointer &#34; + pointer + &#34; was found.&#34;)
+        else:
+            return element_dictionary[pointer]
 
     def get_element_list(self):
         &#34;&#34;&#34;Returns a list containing all elements from within the GEDCOM file
@@ -1133,6 +1158,29 @@ used to specify only natural (genetic) ancestors.</p>
     return ancestors</code></pre>
 </details>
 </dd>
+<dt id="gedcom.parser.Parser.get_element_by_pointer"><code class="name flex">
+<span>def <span class="ident">get_element_by_pointer</span></span>(<span>self, pointer)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the element that has the provided pointer. Raises an exception if that pointer doesn't exist.
+:type pointer: string
+:rtype: Element</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_element_by_pointer(self, pointer):
+    &#34;&#34;&#34;Returns the element that has the provided pointer. Raises an exception if that pointer doesn&#39;t exist.
+    :type pointer: string
+    :rtype: Element
+    &#34;&#34;&#34;
+    element_dictionary = self.get_element_dictionary()
+    if pointer not in element_dictionary:
+        raise PointerNotFoundException(&#34;No element with the pointer &#34; + pointer + &#34; was found.&#34;)
+    else:
+        return element_dictionary[pointer]</code></pre>
+</details>
+</dd>
 <dt id="gedcom.parser.Parser.get_element_dictionary"><code class="name flex">
 <span>def <span class="ident">get_element_dictionary</span></span>(<span>self)</span>
 </code></dt>
@@ -1642,6 +1690,25 @@ and <code><a title="gedcom.parser.Parser.get_element_dictionary" href="#gedcom.p
 </dd>
 </dl>
 </dd>
+<dt id="gedcom.parser.PointerNotFoundException"><code class="flex name class">
+<span>class <span class="ident">PointerNotFoundException</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Common base class for all non-exit exceptions.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class PointerNotFoundException(Exception):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
 </dl>
 </section>
 </article>
@@ -1666,6 +1733,7 @@ and <code><a title="gedcom.parser.Parser.get_element_dictionary" href="#gedcom.p
 <ul class="">
 <li><code><a title="gedcom.parser.Parser.find_path_to_ancestor" href="#gedcom.parser.Parser.find_path_to_ancestor">find_path_to_ancestor</a></code></li>
 <li><code><a title="gedcom.parser.Parser.get_ancestors" href="#gedcom.parser.Parser.get_ancestors">get_ancestors</a></code></li>
+<li><code><a title="gedcom.parser.Parser.get_element_by_pointer" href="#gedcom.parser.Parser.get_element_by_pointer">get_element_by_pointer</a></code></li>
 <li><code><a title="gedcom.parser.Parser.get_element_dictionary" href="#gedcom.parser.Parser.get_element_dictionary">get_element_dictionary</a></code></li>
 <li><code><a title="gedcom.parser.Parser.get_element_list" href="#gedcom.parser.Parser.get_element_list">get_element_list</a></code></li>
 <li><code><a title="gedcom.parser.Parser.get_families" href="#gedcom.parser.Parser.get_families">get_families</a></code></li>
@@ -1683,6 +1751,9 @@ and <code><a title="gedcom.parser.Parser.get_element_dictionary" href="#gedcom.p
 <li><code><a title="gedcom.parser.Parser.print_gedcom" href="#gedcom.parser.Parser.print_gedcom">print_gedcom</a></code></li>
 <li><code><a title="gedcom.parser.Parser.save_gedcom" href="#gedcom.parser.Parser.save_gedcom">save_gedcom</a></code></li>
 </ul>
+</li>
+<li>
+<h4><code><a title="gedcom.parser.PointerNotFoundException" href="#gedcom.parser.PointerNotFoundException">PointerNotFoundException</a></code></h4>
 </li>
 </ul>
 </li>
