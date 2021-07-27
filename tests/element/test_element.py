@@ -1,15 +1,15 @@
 import unittest
 
-from gedcom.element.element import Element
+from python_gedcom_2.element.element import Element
 
-from gedcom.element.object import ObjectElement
+from python_gedcom_2.element.object import ObjectElement
 
-from gedcom.element.individual import IndividualElement
+from python_gedcom_2.element.individual import IndividualElement
 
-from gedcom.element.file import FileElement
+from python_gedcom_2.element.file import FileElement
 
-from gedcom.element.family import FamilyElement
-from gedcom.element.root import RootElement
+from python_gedcom_2.element.family import FamilyElement
+from python_gedcom_2.element.root import RootElement
 
 
 class TestElement(unittest.TestCase):

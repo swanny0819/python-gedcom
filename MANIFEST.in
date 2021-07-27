@@ -1,6 +1,6 @@
 exclude MANIFEST.in
 
-# Include the README and the CHANGELOG
+# Include the README. the CHANGELOG, and the LOGO
 include *.md
 
 # Include the license file

@@ -1,6 +1,6 @@
 """GEDCOM element consisting of tag `gedcom.tags.GEDCOM_TAG_FILE`"""
 
-from gedcom.element.element import Element
+from python_gedcom_2.element.element import Element
 
 
 class NotAnActualFileError(Exception):

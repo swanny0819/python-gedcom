@@ -3,8 +3,8 @@ Base GEDCOM element
 """
 
 from sys import version_info
-from gedcom.helpers import deprecated
-import gedcom.tags
+from python_gedcom_2.helpers import deprecated
+import python_gedcom_2.tags
 
 
 class Element(object):
@@ -88,10 +88,10 @@ class Element(object):
         last_crlf = self.__crlf
         for element in self.get_child_elements():
             tag = element.get_tag()
-            if tag == gedcom.tags.GEDCOM_TAG_CONCATENATION:
+            if tag == python_gedcom_2.tags.GEDCOM_TAG_CONCATENATION:
                 result += element.get_value()
                 last_crlf = element.__crlf
-            elif tag == gedcom.tags.GEDCOM_TAG_CONTINUED:
+            elif tag == python_gedcom_2.tags.GEDCOM_TAG_CONTINUED:
                 result += last_crlf + element.get_value()
                 last_crlf = element.__crlf
         return result
@@ -144,7 +144,7 @@ class Element(object):
         index = 0
         size = len(string)
         while index < size:
-            index += self.__add_bounded_child(gedcom.tags.GEDCOM_TAG_CONCATENATION, string[index:])
+            index += self.__add_bounded_child(python_gedcom_2.tags.GEDCOM_TAG_CONCATENATION, string[index:])
 
     def set_multi_line_value(self, value):
         """Sets the value of this element, adding concatenation and continuation lines when necessary
@@ -152,7 +152,7 @@ class Element(object):
         """
         self.set_value('')
         self.__children = [child for child in self.get_child_elements() if
-                           child.get_tag() not in (gedcom.tags.GEDCOM_TAG_CONCATENATION, gedcom.tags.GEDCOM_TAG_CONTINUED)]
+                           child.get_tag() not in (python_gedcom_2.tags.GEDCOM_TAG_CONCATENATION, python_gedcom_2.tags.GEDCOM_TAG_CONTINUED)]
 
         lines = value.splitlines()
         if lines:
@@ -161,7 +161,7 @@ class Element(object):
             self.__add_concatenation(line[n:])
 
             for line in lines:
-                n = self.__add_bounded_child(gedcom.tags.GEDCOM_TAG_CONTINUED, line)
+                n = self.__add_bounded_child(python_gedcom_2.tags.GEDCOM_TAG_CONTINUED, line)
                 self.__add_concatenation(line[n:])
 
     def get_child_elements(self):
@@ -178,16 +178,16 @@ class Element(object):
         :type value: str
         :rtype: Element
         """
-        from gedcom.element.family import FamilyElement
-        from gedcom.element.file import FileElement
-        from gedcom.element.individual import IndividualElement
-        from gedcom.element.object import ObjectElement
+        from python_gedcom_2.element.family import FamilyElement
+        from python_gedcom_2.element.file import FileElement
+        from python_gedcom_2.element.individual import IndividualElement
+        from python_gedcom_2.element.object import ObjectElement
 
         tag_element_dict = {
-            gedcom.tags.GEDCOM_TAG_FAMILY: FamilyElement,
-            gedcom.tags.GEDCOM_TAG_FILE: FileElement,
-            gedcom.tags.GEDCOM_TAG_INDIVIDUAL: IndividualElement,
-            gedcom.tags.GEDCOM_TAG_OBJECT: ObjectElement,
+            python_gedcom_2.tags.GEDCOM_TAG_FAMILY: FamilyElement,
+            python_gedcom_2.tags.GEDCOM_TAG_FILE: FileElement,
+            python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL: IndividualElement,
+            python_gedcom_2.tags.GEDCOM_TAG_OBJECT: ObjectElement,
         }
 
         if tag in tag_element_dict:

@@ -1,8 +1,8 @@
 import unittest
 
-from gedcom.parser import Parser
+from python_gedcom_2.parser import Parser
 
-from gedcom.element.individual import IndividualElement
+from python_gedcom_2.element.individual import IndividualElement
 
 
 class TestIndividualElement(unittest.TestCase):

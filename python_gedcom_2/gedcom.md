@@ -24,8 +24,8 @@ simply append the `--pre` option to `pip3`: `pip3 install python-gedcom --pre`
 When successfully installed you may import the `gedcom` package and use it like so:
 
 ```python
-from gedcom.element.individual import IndividualElement
-from gedcom.parser import Parser
+from python_gedcom_2.element.individual import IndividualElement
+from python_gedcom_2.parser import Parser
 
 # Path to your ".ged" file
 file_path = ''
@@ -64,7 +64,7 @@ Large sites like Ancestry and MyHeritage (among others) don't always produce per
 If you encounter errors in parsing, you might consider disabling strict parsing which is enabled by default:
 
 ```python
-from gedcom.parser import Parser
+from python_gedcom_2.parser import Parser
 
 file_path = '' # Path to your `.ged` file
 

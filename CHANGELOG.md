@@ -16,7 +16,7 @@
   The new way to parse is as follows:
   ```python
   # from gedcom import Gedcom   <- Old way of importing the parser
-  from gedcom.parser import Parser
+  from python_gedcom_2.parser import Parser
 
   file_path = '' # Path to your `.ged` file
 

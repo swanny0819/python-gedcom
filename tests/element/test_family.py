@@ -1,6 +1,6 @@
 import unittest
 
-from gedcom.parser import Parser
+from python_gedcom_2.parser import Parser
 
 
 class TestFamilyElement(unittest.TestCase):

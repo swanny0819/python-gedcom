@@ -1,11 +1,11 @@
 import unittest
 
-from gedcom.element.family import NotAnActualFamilyError
+from python_gedcom_2.element.family import NotAnActualFamilyError
 
-from gedcom.element.object import ObjectElement
-from gedcom.element.individual import IndividualElement, NotAnActualIndividualError
-from gedcom.element.root import RootElement
-from gedcom.parser import Parser, GedcomFormatViolationError, FAMILY_MEMBERS_TYPE_PARENTS, FAMILY_MEMBERS_TYPE_HUSBAND, FAMILY_MEMBERS_TYPE_WIFE, \
+from python_gedcom_2.element.object import ObjectElement
+from python_gedcom_2.element.individual import IndividualElement, NotAnActualIndividualError
+from python_gedcom_2.element.root import RootElement
+from python_gedcom_2.parser import Parser, GedcomFormatViolationError, FAMILY_MEMBERS_TYPE_PARENTS, FAMILY_MEMBERS_TYPE_HUSBAND, FAMILY_MEMBERS_TYPE_WIFE, \
     FAMILY_MEMBERS_TYPE_CHILDREN, PointerNotFoundException
 
 

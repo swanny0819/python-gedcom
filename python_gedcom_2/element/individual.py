@@ -1,9 +1,9 @@
 """GEDCOM element consisting of tag `gedcom.tags.GEDCOM_TAG_INDIVIDUAL`"""
 
 import re as regex
-from gedcom.element.element import Element
-from gedcom.helpers import deprecated
-import gedcom.tags
+from python_gedcom_2.element.element import Element
+from python_gedcom_2.helpers import deprecated
+import python_gedcom_2.tags
 
 
 class NotAnActualIndividualError(Exception):
@@ -13,32 +13,32 @@ class NotAnActualIndividualError(Exception):
 class IndividualElement(Element):
 
     def get_tag(self):
-        return gedcom.tags.GEDCOM_TAG_INDIVIDUAL
+        return python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL
 
     def is_deceased(self):
         """Checks if this individual is deceased
         :rtype: bool
         """
-        return self._is_tag_present(gedcom.tags.GEDCOM_TAG_DEATH)
+        return self._is_tag_present(python_gedcom_2.tags.GEDCOM_TAG_DEATH)
 
     def is_child(self):
         """Checks if this element is a child of a family
         :rtype: bool
         """
-        return self._is_tag_present(gedcom.tags.GEDCOM_TAG_FAMILY_CHILD)
+        return self._is_tag_present(python_gedcom_2.tags.GEDCOM_TAG_FAMILY_CHILD)
 
     def is_spouse(self):
         """Checks if this element is a spouse in a family
         :rtype: bool
         """
-        return self._is_tag_present(gedcom.tags.GEDCOM_TAG_FAMILY_SPOUSE)
+        return self._is_tag_present(python_gedcom_2.tags.GEDCOM_TAG_FAMILY_SPOUSE)
 
     def is_private(self):
         """Checks if this individual is marked private
         :rtype: bool
         """
         for child in self.get_child_elements():
-            if child.get_tag() == gedcom.tags.GEDCOM_TAG_PRIVATE:
+            if child.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_PRIVATE:
                 private = child.get_value()
                 if private == 'Y':
                     return True
@@ -59,7 +59,7 @@ class IndividualElement(Element):
         found_surname_name = False
 
         for child in self.get_child_elements():
-            if child.get_tag() == gedcom.tags.GEDCOM_TAG_NAME:
+            if child.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_NAME:
                 # Some GEDCOM files don't use child tags but instead
                 # place the name in the value of the NAME tag.
                 if child.get_value() != "":
@@ -74,11 +74,11 @@ class IndividualElement(Element):
 
                 for childOfChild in child.get_child_elements():
 
-                    if childOfChild.get_tag() == gedcom.tags.GEDCOM_TAG_GIVEN_NAME:
+                    if childOfChild.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_GIVEN_NAME:
                         given_name = childOfChild.get_value()
                         found_given_name = True
 
-                    if childOfChild.get_tag() == gedcom.tags.GEDCOM_TAG_SURNAME:
+                    if childOfChild.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_SURNAME:
                         surname = childOfChild.get_value()
                         found_surname_name = True
 
@@ -89,7 +89,7 @@ class IndividualElement(Element):
         return given_name, surname
 
     def get_all_names(self):
-        return [a.get_value() for a in self.get_child_elements() if a.get_tag() == gedcom.tags.GEDCOM_TAG_NAME]
+        return [a.get_value() for a in self.get_child_elements() if a.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_NAME]
 
     def surname_match(self, surname_to_match):
         """Matches a string with the surname of an individual
@@ -123,7 +123,7 @@ class IndividualElement(Element):
         gender = ""
 
         for child in self.get_child_elements():
-            if child.get_tag() == gedcom.tags.GEDCOM_TAG_SEX:
+            if child.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_SEX:
                 gender = child.get_value()
 
         return gender
@@ -137,13 +137,13 @@ class IndividualElement(Element):
             if child.get_tag() == tag:
                 for childOfChild in child.get_child_elements():
 
-                    if childOfChild.get_tag() == gedcom.tags.GEDCOM_TAG_DATE:
+                    if childOfChild.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_DATE:
                         date = childOfChild.get_value()
 
-                    if childOfChild.get_tag() == gedcom.tags.GEDCOM_TAG_PLACE:
+                    if childOfChild.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_PLACE:
                         place = childOfChild.get_value()
 
-                    if childOfChild.get_tag() == gedcom.tags.GEDCOM_TAG_SOURCE:
+                    if childOfChild.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_SOURCE:
                         sources.append(childOfChild.get_value())
 
         return date, place, sources
@@ -152,13 +152,13 @@ class IndividualElement(Element):
         """Returns the birth data of a person formatted as a tuple: (`str` date, `str` place, `list` sources)
         :rtype: tuple
         """
-        return self.__get_data_for_date_bearing_tag(gedcom.tags.GEDCOM_TAG_BIRTH)
+        return self.__get_data_for_date_bearing_tag(python_gedcom_2.tags.GEDCOM_TAG_BIRTH)
 
     def get_death_data(self):
         """Returns the death data of a person formatted as a tuple: (`str` date, `str` place, `list` sources)
         :rtype: tuple
         """
-        return self.__get_data_for_date_bearing_tag(gedcom.tags.GEDCOM_TAG_DEATH)
+        return self.__get_data_for_date_bearing_tag(python_gedcom_2.tags.GEDCOM_TAG_DEATH)
 
     def __get_year_in_tag_type(self, tag):
         date = ""
@@ -166,7 +166,7 @@ class IndividualElement(Element):
         for child in self.get_child_elements():
             if child.get_tag() == tag:
                 for childOfChild in child.get_child_elements():
-                    if childOfChild.get_tag() == gedcom.tags.GEDCOM_TAG_DATE:
+                    if childOfChild.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_DATE:
                         date_split = childOfChild.get_value().split()
                         date = date_split[len(date_split) - 1]
 
@@ -181,13 +181,13 @@ class IndividualElement(Element):
         """Returns the birth year of a person in integer format
         :rtype: int
         """
-        return self.__get_year_in_tag_type(gedcom.tags.GEDCOM_TAG_BIRTH)
+        return self.__get_year_in_tag_type(python_gedcom_2.tags.GEDCOM_TAG_BIRTH)
 
     def get_death_year(self):
         """Returns the death year of a person in integer format
         :rtype: int
         """
-        return self.__get_year_in_tag_type(gedcom.tags.GEDCOM_TAG_DEATH)
+        return self.__get_year_in_tag_type(python_gedcom_2.tags.GEDCOM_TAG_DEATH)
 
     @deprecated
     def get_burial(self):
@@ -201,7 +201,7 @@ class IndividualElement(Element):
         """Returns the burial data of a person formatted as a tuple: (`str` date, `str´ place, `list` sources)
         :rtype: tuple
         """
-        return self.__get_data_for_date_bearing_tag(gedcom.tags.GEDCOM_TAG_BURIAL)
+        return self.__get_data_for_date_bearing_tag(python_gedcom_2.tags.GEDCOM_TAG_BURIAL)
 
     @deprecated
     def get_census(self):
@@ -218,7 +218,7 @@ class IndividualElement(Element):
         census = []
 
         for child in self.get_child_elements():
-            if child.get_tag() == gedcom.tags.GEDCOM_TAG_CENSUS:
+            if child.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_CENSUS:
 
                 date = ''
                 place = ''
@@ -226,13 +226,13 @@ class IndividualElement(Element):
 
                 for childOfChild in child.get_child_elements():
 
-                    if childOfChild.get_tag() == gedcom.tags.GEDCOM_TAG_DATE:
+                    if childOfChild.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_DATE:
                         date = childOfChild.get_value()
 
-                    if childOfChild.get_tag() == gedcom.tags.GEDCOM_TAG_PLACE:
+                    if childOfChild.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_PLACE:
                         place = childOfChild.get_value()
 
-                    if childOfChild.get_tag() == gedcom.tags.GEDCOM_TAG_SOURCE:
+                    if childOfChild.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_SOURCE:
                         sources.append(childOfChild.get_value())
 
                 census.append((date, place, sources))
@@ -246,9 +246,9 @@ class IndividualElement(Element):
         date = ""
 
         for child in self.get_child_elements():
-            if child.get_tag() == gedcom.tags.GEDCOM_TAG_CHANGE:
+            if child.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_CHANGE:
                 for childOfChild in child.get_child_elements():
-                    if childOfChild.get_tag() == gedcom.tags.GEDCOM_TAG_DATE:
+                    if childOfChild.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_DATE:
                         date = childOfChild.get_value()
 
         return date
@@ -260,7 +260,7 @@ class IndividualElement(Element):
         occupation = ""
 
         for child in self.get_child_elements():
-            if child.get_tag() == gedcom.tags.GEDCOM_TAG_OCCUPATION:
+            if child.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_OCCUPATION:
                 occupation = child.get_value()
 
         return occupation

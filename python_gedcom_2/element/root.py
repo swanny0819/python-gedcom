@@ -1,6 +1,6 @@
 """Virtual GEDCOM root element containing all logical records as children"""
 
-from gedcom.element.element import Element
+from python_gedcom_2.element.element import Element
 
 
 class RootElement(Element):
