@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.2" />
-<title>gedcom.parser API documentation</title>
+<title>python_gedcom_2.parser API documentation</title>
 <meta name="description" content="Module containing the actual `gedcom.parser.Parser` used to generate elements - out of each line -
 which can in return be manipulated." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -20,10 +20,10 @@ which can in return be manipulated." />
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>gedcom.parser</code></h1>
+<h1 class="title">Module <code>python_gedcom_2.parser</code></h1>
 </header>
 <section id="section-intro">
-<p>Module containing the actual <code><a title="gedcom.parser.Parser" href="#gedcom.parser.Parser">Parser</a></code> used to generate elements - out of each line -
+<p>Module containing the actual <code>gedcom.parser.Parser</code> used to generate elements - out of each line -
 which can in return be manipulated.</p>
 <details class="source">
 <summary>
@@ -36,23 +36,24 @@ which can in return be manipulated.
 
 import re as regex
 from sys import version_info
-from gedcom.element.element import Element
-from gedcom.element.family import FamilyElement, NotAnActualFamilyError
-from gedcom.element.file import FileElement
-from gedcom.element.individual import IndividualElement, NotAnActualIndividualError
-from gedcom.element.object import ObjectElement
-from gedcom.element.root import RootElement
-import gedcom.tags
+from python_gedcom_2.element.element import Element
+from python_gedcom_2.element.family import FamilyElement, NotAnActualFamilyError
+from python_gedcom_2.element.file import FileElement
+from python_gedcom_2.element.individual import IndividualElement, NotAnActualIndividualError
+from python_gedcom_2.element.object import ObjectElement
+from python_gedcom_2.element.root import RootElement
+import python_gedcom_2.tags
 
 FAMILY_MEMBERS_TYPE_ALL = &#34;ALL&#34;
-FAMILY_MEMBERS_TYPE_CHILDREN = gedcom.tags.GEDCOM_TAG_CHILD
-FAMILY_MEMBERS_TYPE_HUSBAND = gedcom.tags.GEDCOM_TAG_HUSBAND
+FAMILY_MEMBERS_TYPE_CHILDREN = python_gedcom_2.tags.GEDCOM_TAG_CHILD
+FAMILY_MEMBERS_TYPE_HUSBAND = python_gedcom_2.tags.GEDCOM_TAG_HUSBAND
 FAMILY_MEMBERS_TYPE_PARENTS = &#34;PARENTS&#34;
-FAMILY_MEMBERS_TYPE_WIFE = gedcom.tags.GEDCOM_TAG_WIFE
+FAMILY_MEMBERS_TYPE_WIFE = python_gedcom_2.tags.GEDCOM_TAG_WIFE
 
 
 class GedcomFormatViolationError(Exception):
     pass
+
 
 class PointerNotFoundException(Exception):
     pass
@@ -241,10 +242,10 @@ class Parser(object):
                     pointer = None
                     value = line_parts[0].strip()
                     crlf = line_parts[1]
-                    if tag != gedcom.tags.GEDCOM_TAG_CONTINUED and tag != gedcom.tags.GEDCOM_TAG_CONCATENATION:
+                    if tag != python_gedcom_2.tags.GEDCOM_TAG_CONTINUED and tag != python_gedcom_2.tags.GEDCOM_TAG_CONCATENATION:
                         # Increment level and change this line to a CONC
                         level += 1
-                        tag = gedcom.tags.GEDCOM_TAG_CONCATENATION
+                        tag = python_gedcom_2.tags.GEDCOM_TAG_CONCATENATION
         else:
             line_parts = regex_match.groups()
 
@@ -262,13 +263,13 @@ class Parser(object):
             raise GedcomFormatViolationError(error_message)
 
         # Create element. Store in list and dict, create children and parents.
-        if tag == gedcom.tags.GEDCOM_TAG_INDIVIDUAL:
+        if tag == python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL:
             element = IndividualElement(level, pointer, tag, value, crlf, multi_line=False)
-        elif tag == gedcom.tags.GEDCOM_TAG_FAMILY:
+        elif tag == python_gedcom_2.tags.GEDCOM_TAG_FAMILY:
             element = FamilyElement(level, pointer, tag, value, crlf, multi_line=False)
-        elif tag == gedcom.tags.GEDCOM_TAG_FILE:
+        elif tag == python_gedcom_2.tags.GEDCOM_TAG_FILE:
             element = FileElement(level, pointer, tag, value, crlf, multi_line=False)
-        elif tag == gedcom.tags.GEDCOM_TAG_OBJECT:
+        elif tag == python_gedcom_2.tags.GEDCOM_TAG_OBJECT:
             element = ObjectElement(level, pointer, tag, value, crlf, multi_line=False)
         else:
             element = Element(level, pointer, tag, value, crlf, multi_line=False)
@@ -303,19 +304,19 @@ class Parser(object):
         marriages = []
         if not isinstance(individual, IndividualElement):
             raise NotAnActualIndividualError(
-                &#34;Operation only valid for elements with %s tag&#34; % gedcom.tags.GEDCOM_TAG_INDIVIDUAL
+                &#34;Operation only valid for elements with %s tag&#34; % python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL
             )
         # Get and analyze families where individual is spouse.
-        families = self.get_families(individual, gedcom.tags.GEDCOM_TAG_FAMILY_SPOUSE)
+        families = self.get_families(individual, python_gedcom_2.tags.GEDCOM_TAG_FAMILY_SPOUSE)
         for family in families:
             for family_data in family.get_child_elements():
-                if family_data.get_tag() == gedcom.tags.GEDCOM_TAG_MARRIAGE:
+                if family_data.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_MARRIAGE:
                     date = &#39;&#39;
                     place = &#39;&#39;
                     for marriage_data in family_data.get_child_elements():
-                        if marriage_data.get_tag() == gedcom.tags.GEDCOM_TAG_DATE:
+                        if marriage_data.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_DATE:
                             date = marriage_data.get_value()
-                        if marriage_data.get_tag() == gedcom.tags.GEDCOM_TAG_PLACE:
+                        if marriage_data.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_PLACE:
                             place = marriage_data.get_value()
                     marriages.append((date, place))
         return marriages
@@ -329,16 +330,16 @@ class Parser(object):
 
         if not isinstance(individual, IndividualElement):
             raise NotAnActualIndividualError(
-                &#34;Operation only valid for elements with %s tag&#34; % gedcom.tags.GEDCOM_TAG_INDIVIDUAL
+                &#34;Operation only valid for elements with %s tag&#34; % python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL
             )
 
         # Get and analyze families where individual is spouse.
-        families = self.get_families(individual, gedcom.tags.GEDCOM_TAG_FAMILY_SPOUSE)
+        families = self.get_families(individual, python_gedcom_2.tags.GEDCOM_TAG_FAMILY_SPOUSE)
         for family in families:
             for child in family.get_child_elements():
-                if child.get_tag() == gedcom.tags.GEDCOM_TAG_MARRIAGE:
+                if child.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_MARRIAGE:
                     for childOfChild in child.get_child_elements():
-                        if childOfChild.get_tag() == gedcom.tags.GEDCOM_TAG_DATE:
+                        if childOfChild.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_DATE:
                             date = childOfChild.get_value().split()[-1]
                             try:
                                 dates.append(int(date))
@@ -354,7 +355,7 @@ class Parser(object):
         &#34;&#34;&#34;
         if not isinstance(individual, IndividualElement):
             raise NotAnActualIndividualError(
-                &#34;Operation only valid for elements with %s tag&#34; % gedcom.tags.GEDCOM_TAG_INDIVIDUAL
+                &#34;Operation only valid for elements with %s tag&#34; % python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL
             )
 
         years = self.get_marriage_years(individual)
@@ -369,7 +370,7 @@ class Parser(object):
         &#34;&#34;&#34;
         if not isinstance(individual, IndividualElement):
             raise NotAnActualIndividualError(
-                &#34;Operation only valid for elements with %s tag&#34; % gedcom.tags.GEDCOM_TAG_INDIVIDUAL
+                &#34;Operation only valid for elements with %s tag&#34; % python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL
             )
 
         years = self.get_marriage_years(individual)
@@ -378,7 +379,7 @@ class Parser(object):
                 return True
         return False
 
-    def get_families(self, individual, family_type=gedcom.tags.GEDCOM_TAG_FAMILY_SPOUSE):
+    def get_families(self, individual, family_type=python_gedcom_2.tags.GEDCOM_TAG_FAMILY_SPOUSE):
         &#34;&#34;&#34;Return family elements listed for an individual
 
         family_type can be `gedcom.tags.GEDCOM_TAG_FAMILY_SPOUSE` (families where the individual is a spouse) or
@@ -391,7 +392,7 @@ class Parser(object):
         &#34;&#34;&#34;
         if not isinstance(individual, IndividualElement):
             raise NotAnActualIndividualError(
-                &#34;Operation only valid for elements with %s tag&#34; % gedcom.tags.GEDCOM_TAG_INDIVIDUAL
+                &#34;Operation only valid for elements with %s tag&#34; % python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL
             )
 
         families = []
@@ -417,7 +418,7 @@ class Parser(object):
         &#34;&#34;&#34;
         if not isinstance(individual, IndividualElement):
             raise NotAnActualIndividualError(
-                &#34;Operation only valid for elements with %s tag&#34; % gedcom.tags.GEDCOM_TAG_INDIVIDUAL
+                &#34;Operation only valid for elements with %s tag&#34; % python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL
             )
 
         parents = self.get_parents(individual, ancestor_type)
@@ -441,25 +442,25 @@ class Parser(object):
         &#34;&#34;&#34;
         if not isinstance(individual, IndividualElement):
             raise NotAnActualIndividualError(
-                &#34;Operation only valid for elements with %s tag&#34; % gedcom.tags.GEDCOM_TAG_INDIVIDUAL
+                &#34;Operation only valid for elements with %s tag&#34; % python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL
             )
 
         parents = []
-        families = self.get_families(individual, gedcom.tags.GEDCOM_TAG_FAMILY_CHILD)
+        families = self.get_families(individual, python_gedcom_2.tags.GEDCOM_TAG_FAMILY_CHILD)
 
         for family in families:
             if parent_type == &#34;NAT&#34;:
                 for family_member in family.get_child_elements():
 
-                    if family_member.get_tag() == gedcom.tags.GEDCOM_TAG_CHILD \
+                    if family_member.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_CHILD \
                        and family_member.get_value() == individual.get_pointer():
 
                         for child in family_member.get_child_elements():
                             if child.get_value() == &#34;Natural&#34;:
-                                if child.get_tag() == gedcom.tags.GEDCOM_PROGRAM_DEFINED_TAG_MREL:
-                                    parents += self.get_family_members(family, gedcom.tags.GEDCOM_TAG_WIFE)
-                                elif child.get_tag() == gedcom.tags.GEDCOM_PROGRAM_DEFINED_TAG_FREL:
-                                    parents += self.get_family_members(family, gedcom.tags.GEDCOM_TAG_HUSBAND)
+                                if child.get_tag() == python_gedcom_2.tags.GEDCOM_PROGRAM_DEFINED_TAG_MREL:
+                                    parents += self.get_family_members(family, python_gedcom_2.tags.GEDCOM_TAG_WIFE)
+                                elif child.get_tag() == python_gedcom_2.tags.GEDCOM_PROGRAM_DEFINED_TAG_FREL:
+                                    parents += self.get_family_members(family, python_gedcom_2.tags.GEDCOM_TAG_HUSBAND)
             else:
                 parents += self.get_family_members(family, &#34;PARENTS&#34;)
 
@@ -471,7 +472,7 @@ class Parser(object):
         &#34;&#34;&#34;
         if not isinstance(descendant, IndividualElement) or not isinstance(ancestor, IndividualElement):
             raise NotAnActualIndividualError(
-                &#34;Operation only valid for elements with %s tag.&#34; % gedcom.tags.GEDCOM_TAG_INDIVIDUAL
+                &#34;Operation only valid for elements with %s tag.&#34; % python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL
             )
 
         if not path:
@@ -505,7 +506,7 @@ class Parser(object):
         &#34;&#34;&#34;
         if not isinstance(family, FamilyElement):
             raise NotAnActualFamilyError(
-                &#34;Operation only valid for element with %s tag.&#34; % gedcom.tags.GEDCOM_TAG_FAMILY
+                &#34;Operation only valid for element with %s tag.&#34; % python_gedcom_2.tags.GEDCOM_TAG_FAMILY
             )
 
         family_members = []
@@ -513,19 +514,19 @@ class Parser(object):
 
         for child_element in family.get_child_elements():
             # Default is ALL
-            is_family = (child_element.get_tag() == gedcom.tags.GEDCOM_TAG_HUSBAND
-                         or child_element.get_tag() == gedcom.tags.GEDCOM_TAG_WIFE
-                         or child_element.get_tag() == gedcom.tags.GEDCOM_TAG_CHILD)
+            is_family = (child_element.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_HUSBAND
+                         or child_element.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_WIFE
+                         or child_element.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_CHILD)
 
             if members_type == FAMILY_MEMBERS_TYPE_PARENTS:
-                is_family = (child_element.get_tag() == gedcom.tags.GEDCOM_TAG_HUSBAND
-                             or child_element.get_tag() == gedcom.tags.GEDCOM_TAG_WIFE)
+                is_family = (child_element.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_HUSBAND
+                             or child_element.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_WIFE)
             elif members_type == FAMILY_MEMBERS_TYPE_HUSBAND:
-                is_family = child_element.get_tag() == gedcom.tags.GEDCOM_TAG_HUSBAND
+                is_family = child_element.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_HUSBAND
             elif members_type == FAMILY_MEMBERS_TYPE_WIFE:
-                is_family = child_element.get_tag() == gedcom.tags.GEDCOM_TAG_WIFE
+                is_family = child_element.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_WIFE
             elif members_type == FAMILY_MEMBERS_TYPE_CHILDREN:
-                is_family = child_element.get_tag() == gedcom.tags.GEDCOM_TAG_CHILD
+                is_family = child_element.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_CHILD
 
             if is_family and child_element.get_value() in element_dictionary:
                 family_members.append(element_dictionary[child_element.get_value()])
@@ -558,7 +559,7 @@ class Parser(object):
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="gedcom.parser.GedcomFormatViolationError"><code class="flex name class">
+<dt id="python_gedcom_2.parser.GedcomFormatViolationError"><code class="flex name class">
 <span>class <span class="ident">GedcomFormatViolationError</span></span>
 <span>(</span><span>*args, **kwargs)</span>
 </code></dt>
@@ -577,7 +578,7 @@ class Parser(object):
 <li>builtins.BaseException</li>
 </ul>
 </dd>
-<dt id="gedcom.parser.Parser"><code class="flex name class">
+<dt id="python_gedcom_2.parser.Parser"><code class="flex name class">
 <span>class <span class="ident">Parser</span></span>
 </code></dt>
 <dd>
@@ -586,8 +587,8 @@ class Parser(object):
 <p>This parser reads and parses a GEDCOM file.</p>
 <p>Elements may be accessed via:</p>
 <ul>
-<li>a <code>list</code> through <code><a title="gedcom.parser.Parser.get_element_list" href="#gedcom.parser.Parser.get_element_list">Parser.get_element_list()</a></code></li>
-<li>a <code>dict</code> through <code><a title="gedcom.parser.Parser.get_element_dictionary" href="#gedcom.parser.Parser.get_element_dictionary">Parser.get_element_dictionary()</a></code></li>
+<li>a <code>list</code> through <code>gedcom.parser.Parser.get_element_list()</code></li>
+<li>a <code>dict</code> through <code>gedcom.parser.Parser.get_element_dictionary()</code></li>
 </ul></div>
 <details class="source">
 <summary>
@@ -776,10 +777,10 @@ class Parser(object):
                     pointer = None
                     value = line_parts[0].strip()
                     crlf = line_parts[1]
-                    if tag != gedcom.tags.GEDCOM_TAG_CONTINUED and tag != gedcom.tags.GEDCOM_TAG_CONCATENATION:
+                    if tag != python_gedcom_2.tags.GEDCOM_TAG_CONTINUED and tag != python_gedcom_2.tags.GEDCOM_TAG_CONCATENATION:
                         # Increment level and change this line to a CONC
                         level += 1
-                        tag = gedcom.tags.GEDCOM_TAG_CONCATENATION
+                        tag = python_gedcom_2.tags.GEDCOM_TAG_CONCATENATION
         else:
             line_parts = regex_match.groups()
 
@@ -797,13 +798,13 @@ class Parser(object):
             raise GedcomFormatViolationError(error_message)
 
         # Create element. Store in list and dict, create children and parents.
-        if tag == gedcom.tags.GEDCOM_TAG_INDIVIDUAL:
+        if tag == python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL:
             element = IndividualElement(level, pointer, tag, value, crlf, multi_line=False)
-        elif tag == gedcom.tags.GEDCOM_TAG_FAMILY:
+        elif tag == python_gedcom_2.tags.GEDCOM_TAG_FAMILY:
             element = FamilyElement(level, pointer, tag, value, crlf, multi_line=False)
-        elif tag == gedcom.tags.GEDCOM_TAG_FILE:
+        elif tag == python_gedcom_2.tags.GEDCOM_TAG_FILE:
             element = FileElement(level, pointer, tag, value, crlf, multi_line=False)
-        elif tag == gedcom.tags.GEDCOM_TAG_OBJECT:
+        elif tag == python_gedcom_2.tags.GEDCOM_TAG_OBJECT:
             element = ObjectElement(level, pointer, tag, value, crlf, multi_line=False)
         else:
             element = Element(level, pointer, tag, value, crlf, multi_line=False)
@@ -838,19 +839,19 @@ class Parser(object):
         marriages = []
         if not isinstance(individual, IndividualElement):
             raise NotAnActualIndividualError(
-                &#34;Operation only valid for elements with %s tag&#34; % gedcom.tags.GEDCOM_TAG_INDIVIDUAL
+                &#34;Operation only valid for elements with %s tag&#34; % python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL
             )
         # Get and analyze families where individual is spouse.
-        families = self.get_families(individual, gedcom.tags.GEDCOM_TAG_FAMILY_SPOUSE)
+        families = self.get_families(individual, python_gedcom_2.tags.GEDCOM_TAG_FAMILY_SPOUSE)
         for family in families:
             for family_data in family.get_child_elements():
-                if family_data.get_tag() == gedcom.tags.GEDCOM_TAG_MARRIAGE:
+                if family_data.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_MARRIAGE:
                     date = &#39;&#39;
                     place = &#39;&#39;
                     for marriage_data in family_data.get_child_elements():
-                        if marriage_data.get_tag() == gedcom.tags.GEDCOM_TAG_DATE:
+                        if marriage_data.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_DATE:
                             date = marriage_data.get_value()
-                        if marriage_data.get_tag() == gedcom.tags.GEDCOM_TAG_PLACE:
+                        if marriage_data.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_PLACE:
                             place = marriage_data.get_value()
                     marriages.append((date, place))
         return marriages
@@ -864,16 +865,16 @@ class Parser(object):
 
         if not isinstance(individual, IndividualElement):
             raise NotAnActualIndividualError(
-                &#34;Operation only valid for elements with %s tag&#34; % gedcom.tags.GEDCOM_TAG_INDIVIDUAL
+                &#34;Operation only valid for elements with %s tag&#34; % python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL
             )
 
         # Get and analyze families where individual is spouse.
-        families = self.get_families(individual, gedcom.tags.GEDCOM_TAG_FAMILY_SPOUSE)
+        families = self.get_families(individual, python_gedcom_2.tags.GEDCOM_TAG_FAMILY_SPOUSE)
         for family in families:
             for child in family.get_child_elements():
-                if child.get_tag() == gedcom.tags.GEDCOM_TAG_MARRIAGE:
+                if child.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_MARRIAGE:
                     for childOfChild in child.get_child_elements():
-                        if childOfChild.get_tag() == gedcom.tags.GEDCOM_TAG_DATE:
+                        if childOfChild.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_DATE:
                             date = childOfChild.get_value().split()[-1]
                             try:
                                 dates.append(int(date))
@@ -889,7 +890,7 @@ class Parser(object):
         &#34;&#34;&#34;
         if not isinstance(individual, IndividualElement):
             raise NotAnActualIndividualError(
-                &#34;Operation only valid for elements with %s tag&#34; % gedcom.tags.GEDCOM_TAG_INDIVIDUAL
+                &#34;Operation only valid for elements with %s tag&#34; % python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL
             )
 
         years = self.get_marriage_years(individual)
@@ -904,7 +905,7 @@ class Parser(object):
         &#34;&#34;&#34;
         if not isinstance(individual, IndividualElement):
             raise NotAnActualIndividualError(
-                &#34;Operation only valid for elements with %s tag&#34; % gedcom.tags.GEDCOM_TAG_INDIVIDUAL
+                &#34;Operation only valid for elements with %s tag&#34; % python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL
             )
 
         years = self.get_marriage_years(individual)
@@ -913,7 +914,7 @@ class Parser(object):
                 return True
         return False
 
-    def get_families(self, individual, family_type=gedcom.tags.GEDCOM_TAG_FAMILY_SPOUSE):
+    def get_families(self, individual, family_type=python_gedcom_2.tags.GEDCOM_TAG_FAMILY_SPOUSE):
         &#34;&#34;&#34;Return family elements listed for an individual
 
         family_type can be `gedcom.tags.GEDCOM_TAG_FAMILY_SPOUSE` (families where the individual is a spouse) or
@@ -926,7 +927,7 @@ class Parser(object):
         &#34;&#34;&#34;
         if not isinstance(individual, IndividualElement):
             raise NotAnActualIndividualError(
-                &#34;Operation only valid for elements with %s tag&#34; % gedcom.tags.GEDCOM_TAG_INDIVIDUAL
+                &#34;Operation only valid for elements with %s tag&#34; % python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL
             )
 
         families = []
@@ -952,7 +953,7 @@ class Parser(object):
         &#34;&#34;&#34;
         if not isinstance(individual, IndividualElement):
             raise NotAnActualIndividualError(
-                &#34;Operation only valid for elements with %s tag&#34; % gedcom.tags.GEDCOM_TAG_INDIVIDUAL
+                &#34;Operation only valid for elements with %s tag&#34; % python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL
             )
 
         parents = self.get_parents(individual, ancestor_type)
@@ -976,25 +977,25 @@ class Parser(object):
         &#34;&#34;&#34;
         if not isinstance(individual, IndividualElement):
             raise NotAnActualIndividualError(
-                &#34;Operation only valid for elements with %s tag&#34; % gedcom.tags.GEDCOM_TAG_INDIVIDUAL
+                &#34;Operation only valid for elements with %s tag&#34; % python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL
             )
 
         parents = []
-        families = self.get_families(individual, gedcom.tags.GEDCOM_TAG_FAMILY_CHILD)
+        families = self.get_families(individual, python_gedcom_2.tags.GEDCOM_TAG_FAMILY_CHILD)
 
         for family in families:
             if parent_type == &#34;NAT&#34;:
                 for family_member in family.get_child_elements():
 
-                    if family_member.get_tag() == gedcom.tags.GEDCOM_TAG_CHILD \
+                    if family_member.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_CHILD \
                        and family_member.get_value() == individual.get_pointer():
 
                         for child in family_member.get_child_elements():
                             if child.get_value() == &#34;Natural&#34;:
-                                if child.get_tag() == gedcom.tags.GEDCOM_PROGRAM_DEFINED_TAG_MREL:
-                                    parents += self.get_family_members(family, gedcom.tags.GEDCOM_TAG_WIFE)
-                                elif child.get_tag() == gedcom.tags.GEDCOM_PROGRAM_DEFINED_TAG_FREL:
-                                    parents += self.get_family_members(family, gedcom.tags.GEDCOM_TAG_HUSBAND)
+                                if child.get_tag() == python_gedcom_2.tags.GEDCOM_PROGRAM_DEFINED_TAG_MREL:
+                                    parents += self.get_family_members(family, python_gedcom_2.tags.GEDCOM_TAG_WIFE)
+                                elif child.get_tag() == python_gedcom_2.tags.GEDCOM_PROGRAM_DEFINED_TAG_FREL:
+                                    parents += self.get_family_members(family, python_gedcom_2.tags.GEDCOM_TAG_HUSBAND)
             else:
                 parents += self.get_family_members(family, &#34;PARENTS&#34;)
 
@@ -1006,7 +1007,7 @@ class Parser(object):
         &#34;&#34;&#34;
         if not isinstance(descendant, IndividualElement) or not isinstance(ancestor, IndividualElement):
             raise NotAnActualIndividualError(
-                &#34;Operation only valid for elements with %s tag.&#34; % gedcom.tags.GEDCOM_TAG_INDIVIDUAL
+                &#34;Operation only valid for elements with %s tag.&#34; % python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL
             )
 
         if not path:
@@ -1040,7 +1041,7 @@ class Parser(object):
         &#34;&#34;&#34;
         if not isinstance(family, FamilyElement):
             raise NotAnActualFamilyError(
-                &#34;Operation only valid for element with %s tag.&#34; % gedcom.tags.GEDCOM_TAG_FAMILY
+                &#34;Operation only valid for element with %s tag.&#34; % python_gedcom_2.tags.GEDCOM_TAG_FAMILY
             )
 
         family_members = []
@@ -1048,19 +1049,19 @@ class Parser(object):
 
         for child_element in family.get_child_elements():
             # Default is ALL
-            is_family = (child_element.get_tag() == gedcom.tags.GEDCOM_TAG_HUSBAND
-                         or child_element.get_tag() == gedcom.tags.GEDCOM_TAG_WIFE
-                         or child_element.get_tag() == gedcom.tags.GEDCOM_TAG_CHILD)
+            is_family = (child_element.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_HUSBAND
+                         or child_element.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_WIFE
+                         or child_element.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_CHILD)
 
             if members_type == FAMILY_MEMBERS_TYPE_PARENTS:
-                is_family = (child_element.get_tag() == gedcom.tags.GEDCOM_TAG_HUSBAND
-                             or child_element.get_tag() == gedcom.tags.GEDCOM_TAG_WIFE)
+                is_family = (child_element.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_HUSBAND
+                             or child_element.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_WIFE)
             elif members_type == FAMILY_MEMBERS_TYPE_HUSBAND:
-                is_family = child_element.get_tag() == gedcom.tags.GEDCOM_TAG_HUSBAND
+                is_family = child_element.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_HUSBAND
             elif members_type == FAMILY_MEMBERS_TYPE_WIFE:
-                is_family = child_element.get_tag() == gedcom.tags.GEDCOM_TAG_WIFE
+                is_family = child_element.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_WIFE
             elif members_type == FAMILY_MEMBERS_TYPE_CHILDREN:
-                is_family = child_element.get_tag() == gedcom.tags.GEDCOM_TAG_CHILD
+                is_family = child_element.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_CHILD
 
             if is_family and child_element.get_value() in element_dictionary:
                 family_members.append(element_dictionary[child_element.get_value()])
@@ -1085,7 +1086,7 @@ class Parser(object):
 </details>
 <h3>Methods</h3>
 <dl>
-<dt id="gedcom.parser.Parser.find_path_to_ancestor"><code class="name flex">
+<dt id="python_gedcom_2.parser.Parser.find_path_to_ancestor"><code class="name flex">
 <span>def <span class="ident">find_path_to_ancestor</span></span>(<span>self, descendant, ancestor, path=None)</span>
 </code></dt>
 <dd>
@@ -1101,7 +1102,7 @@ class Parser(object):
     &#34;&#34;&#34;
     if not isinstance(descendant, IndividualElement) or not isinstance(ancestor, IndividualElement):
         raise NotAnActualIndividualError(
-            &#34;Operation only valid for elements with %s tag.&#34; % gedcom.tags.GEDCOM_TAG_INDIVIDUAL
+            &#34;Operation only valid for elements with %s tag.&#34; % python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL
         )
 
     if not path:
@@ -1119,7 +1120,7 @@ class Parser(object):
     return None</code></pre>
 </details>
 </dd>
-<dt id="gedcom.parser.Parser.get_ancestors"><code class="name flex">
+<dt id="python_gedcom_2.parser.Parser.get_ancestors"><code class="name flex">
 <span>def <span class="ident">get_ancestors</span></span>(<span>self, individual, ancestor_type='ALL')</span>
 </code></dt>
 <dd>
@@ -1145,7 +1146,7 @@ used to specify only natural (genetic) ancestors.</p>
     &#34;&#34;&#34;
     if not isinstance(individual, IndividualElement):
         raise NotAnActualIndividualError(
-            &#34;Operation only valid for elements with %s tag&#34; % gedcom.tags.GEDCOM_TAG_INDIVIDUAL
+            &#34;Operation only valid for elements with %s tag&#34; % python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL
         )
 
     parents = self.get_parents(individual, ancestor_type)
@@ -1158,7 +1159,7 @@ used to specify only natural (genetic) ancestors.</p>
     return ancestors</code></pre>
 </details>
 </dd>
-<dt id="gedcom.parser.Parser.get_element_by_pointer"><code class="name flex">
+<dt id="python_gedcom_2.parser.Parser.get_element_by_pointer"><code class="name flex">
 <span>def <span class="ident">get_element_by_pointer</span></span>(<span>self, pointer)</span>
 </code></dt>
 <dd>
@@ -1181,7 +1182,7 @@ used to specify only natural (genetic) ancestors.</p>
         return element_dictionary[pointer]</code></pre>
 </details>
 </dd>
-<dt id="gedcom.parser.Parser.get_element_dictionary"><code class="name flex">
+<dt id="python_gedcom_2.parser.Parser.get_element_dictionary"><code class="name flex">
 <span>def <span class="ident">get_element_dictionary</span></span>(<span>self)</span>
 </code></dt>
 <dd>
@@ -1216,16 +1217,16 @@ this method return updated data.</p>
     return self.__element_dictionary</code></pre>
 </details>
 </dd>
-<dt id="gedcom.parser.Parser.get_element_list"><code class="name flex">
+<dt id="python_gedcom_2.parser.Parser.get_element_list"><code class="name flex">
 <span>def <span class="ident">get_element_list</span></span>(<span>self)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns a list containing all elements from within the GEDCOM file</p>
 <p>By default elements are in the same order as they appeared in the file.</p>
 <p>This list gets generated on-the-fly, but gets cached. If the database
-was modified, you should call <code><a title="gedcom.parser.Parser.invalidate_cache" href="#gedcom.parser.Parser.invalidate_cache">Parser.invalidate_cache()</a></code> once to let this
+was modified, you should call <code>gedcom.parser.Parser.invalidate_cache()</code> once to let this
 method return updated data.</p>
-<p>Consider using <code><a title="gedcom.parser.Parser.get_root_element" href="#gedcom.parser.Parser.get_root_element">Parser.get_root_element()</a></code> or <code><a title="gedcom.parser.Parser.get_root_child_elements" href="#gedcom.parser.Parser.get_root_child_elements">Parser.get_root_child_elements()</a></code> to access
+<p>Consider using <code>gedcom.parser.Parser.get_root_element()</code> or <code>gedcom.parser.Parser.get_root_child_elements()</code> to access
 the hierarchical GEDCOM tree, unless you rarely modify the database.</p>
 <p>:rtype: list of Element</p></div>
 <details class="source">
@@ -1252,14 +1253,14 @@ the hierarchical GEDCOM tree, unless you rarely modify the database.</p>
     return self.__element_list</code></pre>
 </details>
 </dd>
-<dt id="gedcom.parser.Parser.get_families"><code class="name flex">
+<dt id="python_gedcom_2.parser.Parser.get_families"><code class="name flex">
 <span>def <span class="ident">get_families</span></span>(<span>self, individual, family_type='FAMS')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Return family elements listed for an individual</p>
-<p>family_type can be <code><a title="gedcom.tags.GEDCOM_TAG_FAMILY_SPOUSE" href="tags.html#gedcom.tags.GEDCOM_TAG_FAMILY_SPOUSE">GEDCOM_TAG_FAMILY_SPOUSE</a></code> (families where the individual is a spouse) or
-<code><a title="gedcom.tags.GEDCOM_TAG_FAMILY_CHILD" href="tags.html#gedcom.tags.GEDCOM_TAG_FAMILY_CHILD">GEDCOM_TAG_FAMILY_CHILD</a></code> (families where the individual is a child). If a value is not
-provided, <code><a title="gedcom.tags.GEDCOM_TAG_FAMILY_SPOUSE" href="tags.html#gedcom.tags.GEDCOM_TAG_FAMILY_SPOUSE">GEDCOM_TAG_FAMILY_SPOUSE</a></code> is default value.</p>
+<p>family_type can be <code>gedcom.tags.GEDCOM_TAG_FAMILY_SPOUSE</code> (families where the individual is a spouse) or
+<code>gedcom.tags.GEDCOM_TAG_FAMILY_CHILD</code> (families where the individual is a child). If a value is not
+provided, <code>gedcom.tags.GEDCOM_TAG_FAMILY_SPOUSE</code> is default value.</p>
 <p>:type individual: IndividualElement
 :type family_type: str
 :rtype: list of FamilyElement</p></div>
@@ -1267,7 +1268,7 @@ provided, <code><a title="gedcom.tags.GEDCOM_TAG_FAMILY_SPOUSE" href="tags.html#
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_families(self, individual, family_type=gedcom.tags.GEDCOM_TAG_FAMILY_SPOUSE):
+<pre><code class="python">def get_families(self, individual, family_type=python_gedcom_2.tags.GEDCOM_TAG_FAMILY_SPOUSE):
     &#34;&#34;&#34;Return family elements listed for an individual
 
     family_type can be `gedcom.tags.GEDCOM_TAG_FAMILY_SPOUSE` (families where the individual is a spouse) or
@@ -1280,7 +1281,7 @@ provided, <code><a title="gedcom.tags.GEDCOM_TAG_FAMILY_SPOUSE" href="tags.html#
     &#34;&#34;&#34;
     if not isinstance(individual, IndividualElement):
         raise NotAnActualIndividualError(
-            &#34;Operation only valid for elements with %s tag&#34; % gedcom.tags.GEDCOM_TAG_INDIVIDUAL
+            &#34;Operation only valid for elements with %s tag&#34; % python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL
         )
 
     families = []
@@ -1295,7 +1296,7 @@ provided, <code><a title="gedcom.tags.GEDCOM_TAG_FAMILY_SPOUSE" href="tags.html#
     return families</code></pre>
 </details>
 </dd>
-<dt id="gedcom.parser.Parser.get_family_members"><code class="name flex">
+<dt id="python_gedcom_2.parser.Parser.get_family_members"><code class="name flex">
 <span>def <span class="ident">get_family_members</span></span>(<span>self, family, members_type='ALL')</span>
 </code></dt>
 <dd>
@@ -1330,7 +1331,7 @@ provided, <code><a title="gedcom.tags.GEDCOM_TAG_FAMILY_SPOUSE" href="tags.html#
     &#34;&#34;&#34;
     if not isinstance(family, FamilyElement):
         raise NotAnActualFamilyError(
-            &#34;Operation only valid for element with %s tag.&#34; % gedcom.tags.GEDCOM_TAG_FAMILY
+            &#34;Operation only valid for element with %s tag.&#34; % python_gedcom_2.tags.GEDCOM_TAG_FAMILY
         )
 
     family_members = []
@@ -1338,19 +1339,19 @@ provided, <code><a title="gedcom.tags.GEDCOM_TAG_FAMILY_SPOUSE" href="tags.html#
 
     for child_element in family.get_child_elements():
         # Default is ALL
-        is_family = (child_element.get_tag() == gedcom.tags.GEDCOM_TAG_HUSBAND
-                     or child_element.get_tag() == gedcom.tags.GEDCOM_TAG_WIFE
-                     or child_element.get_tag() == gedcom.tags.GEDCOM_TAG_CHILD)
+        is_family = (child_element.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_HUSBAND
+                     or child_element.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_WIFE
+                     or child_element.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_CHILD)
 
         if members_type == FAMILY_MEMBERS_TYPE_PARENTS:
-            is_family = (child_element.get_tag() == gedcom.tags.GEDCOM_TAG_HUSBAND
-                         or child_element.get_tag() == gedcom.tags.GEDCOM_TAG_WIFE)
+            is_family = (child_element.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_HUSBAND
+                         or child_element.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_WIFE)
         elif members_type == FAMILY_MEMBERS_TYPE_HUSBAND:
-            is_family = child_element.get_tag() == gedcom.tags.GEDCOM_TAG_HUSBAND
+            is_family = child_element.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_HUSBAND
         elif members_type == FAMILY_MEMBERS_TYPE_WIFE:
-            is_family = child_element.get_tag() == gedcom.tags.GEDCOM_TAG_WIFE
+            is_family = child_element.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_WIFE
         elif members_type == FAMILY_MEMBERS_TYPE_CHILDREN:
-            is_family = child_element.get_tag() == gedcom.tags.GEDCOM_TAG_CHILD
+            is_family = child_element.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_CHILD
 
         if is_family and child_element.get_value() in element_dictionary:
             family_members.append(element_dictionary[child_element.get_value()])
@@ -1358,7 +1359,7 @@ provided, <code><a title="gedcom.tags.GEDCOM_TAG_FAMILY_SPOUSE" href="tags.html#
     return family_members</code></pre>
 </details>
 </dd>
-<dt id="gedcom.parser.Parser.get_marriage_years"><code class="name flex">
+<dt id="python_gedcom_2.parser.Parser.get_marriage_years"><code class="name flex">
 <span>def <span class="ident">get_marriage_years</span></span>(<span>self, individual)</span>
 </code></dt>
 <dd>
@@ -1378,16 +1379,16 @@ provided, <code><a title="gedcom.tags.GEDCOM_TAG_FAMILY_SPOUSE" href="tags.html#
 
     if not isinstance(individual, IndividualElement):
         raise NotAnActualIndividualError(
-            &#34;Operation only valid for elements with %s tag&#34; % gedcom.tags.GEDCOM_TAG_INDIVIDUAL
+            &#34;Operation only valid for elements with %s tag&#34; % python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL
         )
 
     # Get and analyze families where individual is spouse.
-    families = self.get_families(individual, gedcom.tags.GEDCOM_TAG_FAMILY_SPOUSE)
+    families = self.get_families(individual, python_gedcom_2.tags.GEDCOM_TAG_FAMILY_SPOUSE)
     for family in families:
         for child in family.get_child_elements():
-            if child.get_tag() == gedcom.tags.GEDCOM_TAG_MARRIAGE:
+            if child.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_MARRIAGE:
                 for childOfChild in child.get_child_elements():
-                    if childOfChild.get_tag() == gedcom.tags.GEDCOM_TAG_DATE:
+                    if childOfChild.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_DATE:
                         date = childOfChild.get_value().split()[-1]
                         try:
                             dates.append(int(date))
@@ -1396,7 +1397,7 @@ provided, <code><a title="gedcom.tags.GEDCOM_TAG_FAMILY_SPOUSE" href="tags.html#
     return dates</code></pre>
 </details>
 </dd>
-<dt id="gedcom.parser.Parser.get_marriages"><code class="name flex">
+<dt id="python_gedcom_2.parser.Parser.get_marriages"><code class="name flex">
 <span>def <span class="ident">get_marriages</span></span>(<span>self, individual)</span>
 </code></dt>
 <dd>
@@ -1415,25 +1416,25 @@ provided, <code><a title="gedcom.tags.GEDCOM_TAG_FAMILY_SPOUSE" href="tags.html#
     marriages = []
     if not isinstance(individual, IndividualElement):
         raise NotAnActualIndividualError(
-            &#34;Operation only valid for elements with %s tag&#34; % gedcom.tags.GEDCOM_TAG_INDIVIDUAL
+            &#34;Operation only valid for elements with %s tag&#34; % python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL
         )
     # Get and analyze families where individual is spouse.
-    families = self.get_families(individual, gedcom.tags.GEDCOM_TAG_FAMILY_SPOUSE)
+    families = self.get_families(individual, python_gedcom_2.tags.GEDCOM_TAG_FAMILY_SPOUSE)
     for family in families:
         for family_data in family.get_child_elements():
-            if family_data.get_tag() == gedcom.tags.GEDCOM_TAG_MARRIAGE:
+            if family_data.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_MARRIAGE:
                 date = &#39;&#39;
                 place = &#39;&#39;
                 for marriage_data in family_data.get_child_elements():
-                    if marriage_data.get_tag() == gedcom.tags.GEDCOM_TAG_DATE:
+                    if marriage_data.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_DATE:
                         date = marriage_data.get_value()
-                    if marriage_data.get_tag() == gedcom.tags.GEDCOM_TAG_PLACE:
+                    if marriage_data.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_PLACE:
                         place = marriage_data.get_value()
                 marriages.append((date, place))
     return marriages</code></pre>
 </details>
 </dd>
-<dt id="gedcom.parser.Parser.get_parents"><code class="name flex">
+<dt id="python_gedcom_2.parser.Parser.get_parents"><code class="name flex">
 <span>def <span class="ident">get_parents</span></span>(<span>self, individual, parent_type='ALL')</span>
 </code></dt>
 <dd>
@@ -1459,32 +1460,32 @@ used to specify only natural (genetic) parents.</p>
     &#34;&#34;&#34;
     if not isinstance(individual, IndividualElement):
         raise NotAnActualIndividualError(
-            &#34;Operation only valid for elements with %s tag&#34; % gedcom.tags.GEDCOM_TAG_INDIVIDUAL
+            &#34;Operation only valid for elements with %s tag&#34; % python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL
         )
 
     parents = []
-    families = self.get_families(individual, gedcom.tags.GEDCOM_TAG_FAMILY_CHILD)
+    families = self.get_families(individual, python_gedcom_2.tags.GEDCOM_TAG_FAMILY_CHILD)
 
     for family in families:
         if parent_type == &#34;NAT&#34;:
             for family_member in family.get_child_elements():
 
-                if family_member.get_tag() == gedcom.tags.GEDCOM_TAG_CHILD \
+                if family_member.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_CHILD \
                    and family_member.get_value() == individual.get_pointer():
 
                     for child in family_member.get_child_elements():
                         if child.get_value() == &#34;Natural&#34;:
-                            if child.get_tag() == gedcom.tags.GEDCOM_PROGRAM_DEFINED_TAG_MREL:
-                                parents += self.get_family_members(family, gedcom.tags.GEDCOM_TAG_WIFE)
-                            elif child.get_tag() == gedcom.tags.GEDCOM_PROGRAM_DEFINED_TAG_FREL:
-                                parents += self.get_family_members(family, gedcom.tags.GEDCOM_TAG_HUSBAND)
+                            if child.get_tag() == python_gedcom_2.tags.GEDCOM_PROGRAM_DEFINED_TAG_MREL:
+                                parents += self.get_family_members(family, python_gedcom_2.tags.GEDCOM_TAG_WIFE)
+                            elif child.get_tag() == python_gedcom_2.tags.GEDCOM_PROGRAM_DEFINED_TAG_FREL:
+                                parents += self.get_family_members(family, python_gedcom_2.tags.GEDCOM_TAG_HUSBAND)
         else:
             parents += self.get_family_members(family, &#34;PARENTS&#34;)
 
     return parents</code></pre>
 </details>
 </dd>
-<dt id="gedcom.parser.Parser.get_root_child_elements"><code class="name flex">
+<dt id="python_gedcom_2.parser.Parser.get_root_child_elements"><code class="name flex">
 <span>def <span class="ident">get_root_child_elements</span></span>(<span>self)</span>
 </code></dt>
 <dd>
@@ -1505,7 +1506,7 @@ used to specify only natural (genetic) parents.</p>
     return self.get_root_element().get_child_elements()</code></pre>
 </details>
 </dd>
-<dt id="gedcom.parser.Parser.get_root_element"><code class="name flex">
+<dt id="python_gedcom_2.parser.Parser.get_root_element"><code class="name flex">
 <span>def <span class="ident">get_root_element</span></span>(<span>self)</span>
 </code></dt>
 <dd>
@@ -1526,12 +1527,12 @@ used to specify only natural (genetic) parents.</p>
     return self.__root_element</code></pre>
 </details>
 </dd>
-<dt id="gedcom.parser.Parser.invalidate_cache"><code class="name flex">
+<dt id="python_gedcom_2.parser.Parser.invalidate_cache"><code class="name flex">
 <span>def <span class="ident">invalidate_cache</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Empties the element list and dictionary to cause <code><a title="gedcom.parser.Parser.get_element_list" href="#gedcom.parser.Parser.get_element_list">Parser.get_element_list()</a></code>
-and <code><a title="gedcom.parser.Parser.get_element_dictionary" href="#gedcom.parser.Parser.get_element_dictionary">Parser.get_element_dictionary()</a></code> to return updated data.</p>
+<div class="desc"><p>Empties the element list and dictionary to cause <code>gedcom.parser.Parser.get_element_list()</code>
+and <code>gedcom.parser.Parser.get_element_dictionary()</code> to return updated data.</p>
 <p>The update gets deferred until each of the methods actually gets called.</p></div>
 <details class="source">
 <summary>
@@ -1547,7 +1548,7 @@ and <code><a title="gedcom.parser.Parser.get_element_dictionary" href="#gedcom.p
     self.__element_dictionary = {}</code></pre>
 </details>
 </dd>
-<dt id="gedcom.parser.Parser.marriage_range_match"><code class="name flex">
+<dt id="python_gedcom_2.parser.Parser.marriage_range_match"><code class="name flex">
 <span>def <span class="ident">marriage_range_match</span></span>(<span>self, individual, from_year, to_year)</span>
 </code></dt>
 <dd>
@@ -1569,7 +1570,7 @@ and <code><a title="gedcom.parser.Parser.get_element_dictionary" href="#gedcom.p
     &#34;&#34;&#34;
     if not isinstance(individual, IndividualElement):
         raise NotAnActualIndividualError(
-            &#34;Operation only valid for elements with %s tag&#34; % gedcom.tags.GEDCOM_TAG_INDIVIDUAL
+            &#34;Operation only valid for elements with %s tag&#34; % python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL
         )
 
     years = self.get_marriage_years(individual)
@@ -1579,7 +1580,7 @@ and <code><a title="gedcom.parser.Parser.get_element_dictionary" href="#gedcom.p
     return False</code></pre>
 </details>
 </dd>
-<dt id="gedcom.parser.Parser.marriage_year_match"><code class="name flex">
+<dt id="python_gedcom_2.parser.Parser.marriage_year_match"><code class="name flex">
 <span>def <span class="ident">marriage_year_match</span></span>(<span>self, individual, year)</span>
 </code></dt>
 <dd>
@@ -1599,14 +1600,14 @@ and <code><a title="gedcom.parser.Parser.get_element_dictionary" href="#gedcom.p
     &#34;&#34;&#34;
     if not isinstance(individual, IndividualElement):
         raise NotAnActualIndividualError(
-            &#34;Operation only valid for elements with %s tag&#34; % gedcom.tags.GEDCOM_TAG_INDIVIDUAL
+            &#34;Operation only valid for elements with %s tag&#34; % python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL
         )
 
     years = self.get_marriage_years(individual)
     return year in years</code></pre>
 </details>
 </dd>
-<dt id="gedcom.parser.Parser.parse"><code class="name flex">
+<dt id="python_gedcom_2.parser.Parser.parse"><code class="name flex">
 <span>def <span class="ident">parse</span></span>(<span>self, gedcom_stream, strict=True)</span>
 </code></dt>
 <dd>
@@ -1633,7 +1634,7 @@ and <code><a title="gedcom.parser.Parser.get_element_dictionary" href="#gedcom.p
         line_number += 1</code></pre>
 </details>
 </dd>
-<dt id="gedcom.parser.Parser.parse_file"><code class="name flex">
+<dt id="python_gedcom_2.parser.Parser.parse_file"><code class="name flex">
 <span>def <span class="ident">parse_file</span></span>(<span>self, file_path, strict=True)</span>
 </code></dt>
 <dd>
@@ -1653,7 +1654,7 @@ and <code><a title="gedcom.parser.Parser.get_element_dictionary" href="#gedcom.p
         self.parse(gedcom_stream, strict)</code></pre>
 </details>
 </dd>
-<dt id="gedcom.parser.Parser.print_gedcom"><code class="name flex">
+<dt id="python_gedcom_2.parser.Parser.print_gedcom"><code class="name flex">
 <span>def <span class="ident">print_gedcom</span></span>(<span>self)</span>
 </code></dt>
 <dd>
@@ -1668,7 +1669,7 @@ and <code><a title="gedcom.parser.Parser.get_element_dictionary" href="#gedcom.p
     self.save_gedcom(stdout)</code></pre>
 </details>
 </dd>
-<dt id="gedcom.parser.Parser.save_gedcom"><code class="name flex">
+<dt id="python_gedcom_2.parser.Parser.save_gedcom"><code class="name flex">
 <span>def <span class="ident">save_gedcom</span></span>(<span>self, open_file)</span>
 </code></dt>
 <dd>
@@ -1690,7 +1691,7 @@ and <code><a title="gedcom.parser.Parser.get_element_dictionary" href="#gedcom.p
 </dd>
 </dl>
 </dd>
-<dt id="gedcom.parser.PointerNotFoundException"><code class="flex name class">
+<dt id="python_gedcom_2.parser.PointerNotFoundException"><code class="flex name class">
 <span>class <span class="ident">PointerNotFoundException</span></span>
 <span>(</span><span>*args, **kwargs)</span>
 </code></dt>
@@ -1720,40 +1721,40 @@ and <code><a title="gedcom.parser.Parser.get_element_dictionary" href="#gedcom.p
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="gedcom" href="index.html">gedcom</a></code></li>
+<li><code><a title="python_gedcom_2" href="index.html">python_gedcom_2</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="gedcom.parser.GedcomFormatViolationError" href="#gedcom.parser.GedcomFormatViolationError">GedcomFormatViolationError</a></code></h4>
+<h4><code><a title="python_gedcom_2.parser.GedcomFormatViolationError" href="#python_gedcom_2.parser.GedcomFormatViolationError">GedcomFormatViolationError</a></code></h4>
 </li>
 <li>
-<h4><code><a title="gedcom.parser.Parser" href="#gedcom.parser.Parser">Parser</a></code></h4>
+<h4><code><a title="python_gedcom_2.parser.Parser" href="#python_gedcom_2.parser.Parser">Parser</a></code></h4>
 <ul class="">
-<li><code><a title="gedcom.parser.Parser.find_path_to_ancestor" href="#gedcom.parser.Parser.find_path_to_ancestor">find_path_to_ancestor</a></code></li>
-<li><code><a title="gedcom.parser.Parser.get_ancestors" href="#gedcom.parser.Parser.get_ancestors">get_ancestors</a></code></li>
-<li><code><a title="gedcom.parser.Parser.get_element_by_pointer" href="#gedcom.parser.Parser.get_element_by_pointer">get_element_by_pointer</a></code></li>
-<li><code><a title="gedcom.parser.Parser.get_element_dictionary" href="#gedcom.parser.Parser.get_element_dictionary">get_element_dictionary</a></code></li>
-<li><code><a title="gedcom.parser.Parser.get_element_list" href="#gedcom.parser.Parser.get_element_list">get_element_list</a></code></li>
-<li><code><a title="gedcom.parser.Parser.get_families" href="#gedcom.parser.Parser.get_families">get_families</a></code></li>
-<li><code><a title="gedcom.parser.Parser.get_family_members" href="#gedcom.parser.Parser.get_family_members">get_family_members</a></code></li>
-<li><code><a title="gedcom.parser.Parser.get_marriage_years" href="#gedcom.parser.Parser.get_marriage_years">get_marriage_years</a></code></li>
-<li><code><a title="gedcom.parser.Parser.get_marriages" href="#gedcom.parser.Parser.get_marriages">get_marriages</a></code></li>
-<li><code><a title="gedcom.parser.Parser.get_parents" href="#gedcom.parser.Parser.get_parents">get_parents</a></code></li>
-<li><code><a title="gedcom.parser.Parser.get_root_child_elements" href="#gedcom.parser.Parser.get_root_child_elements">get_root_child_elements</a></code></li>
-<li><code><a title="gedcom.parser.Parser.get_root_element" href="#gedcom.parser.Parser.get_root_element">get_root_element</a></code></li>
-<li><code><a title="gedcom.parser.Parser.invalidate_cache" href="#gedcom.parser.Parser.invalidate_cache">invalidate_cache</a></code></li>
-<li><code><a title="gedcom.parser.Parser.marriage_range_match" href="#gedcom.parser.Parser.marriage_range_match">marriage_range_match</a></code></li>
-<li><code><a title="gedcom.parser.Parser.marriage_year_match" href="#gedcom.parser.Parser.marriage_year_match">marriage_year_match</a></code></li>
-<li><code><a title="gedcom.parser.Parser.parse" href="#gedcom.parser.Parser.parse">parse</a></code></li>
-<li><code><a title="gedcom.parser.Parser.parse_file" href="#gedcom.parser.Parser.parse_file">parse_file</a></code></li>
-<li><code><a title="gedcom.parser.Parser.print_gedcom" href="#gedcom.parser.Parser.print_gedcom">print_gedcom</a></code></li>
-<li><code><a title="gedcom.parser.Parser.save_gedcom" href="#gedcom.parser.Parser.save_gedcom">save_gedcom</a></code></li>
+<li><code><a title="python_gedcom_2.parser.Parser.find_path_to_ancestor" href="#python_gedcom_2.parser.Parser.find_path_to_ancestor">find_path_to_ancestor</a></code></li>
+<li><code><a title="python_gedcom_2.parser.Parser.get_ancestors" href="#python_gedcom_2.parser.Parser.get_ancestors">get_ancestors</a></code></li>
+<li><code><a title="python_gedcom_2.parser.Parser.get_element_by_pointer" href="#python_gedcom_2.parser.Parser.get_element_by_pointer">get_element_by_pointer</a></code></li>
+<li><code><a title="python_gedcom_2.parser.Parser.get_element_dictionary" href="#python_gedcom_2.parser.Parser.get_element_dictionary">get_element_dictionary</a></code></li>
+<li><code><a title="python_gedcom_2.parser.Parser.get_element_list" href="#python_gedcom_2.parser.Parser.get_element_list">get_element_list</a></code></li>
+<li><code><a title="python_gedcom_2.parser.Parser.get_families" href="#python_gedcom_2.parser.Parser.get_families">get_families</a></code></li>
+<li><code><a title="python_gedcom_2.parser.Parser.get_family_members" href="#python_gedcom_2.parser.Parser.get_family_members">get_family_members</a></code></li>
+<li><code><a title="python_gedcom_2.parser.Parser.get_marriage_years" href="#python_gedcom_2.parser.Parser.get_marriage_years">get_marriage_years</a></code></li>
+<li><code><a title="python_gedcom_2.parser.Parser.get_marriages" href="#python_gedcom_2.parser.Parser.get_marriages">get_marriages</a></code></li>
+<li><code><a title="python_gedcom_2.parser.Parser.get_parents" href="#python_gedcom_2.parser.Parser.get_parents">get_parents</a></code></li>
+<li><code><a title="python_gedcom_2.parser.Parser.get_root_child_elements" href="#python_gedcom_2.parser.Parser.get_root_child_elements">get_root_child_elements</a></code></li>
+<li><code><a title="python_gedcom_2.parser.Parser.get_root_element" href="#python_gedcom_2.parser.Parser.get_root_element">get_root_element</a></code></li>
+<li><code><a title="python_gedcom_2.parser.Parser.invalidate_cache" href="#python_gedcom_2.parser.Parser.invalidate_cache">invalidate_cache</a></code></li>
+<li><code><a title="python_gedcom_2.parser.Parser.marriage_range_match" href="#python_gedcom_2.parser.Parser.marriage_range_match">marriage_range_match</a></code></li>
+<li><code><a title="python_gedcom_2.parser.Parser.marriage_year_match" href="#python_gedcom_2.parser.Parser.marriage_year_match">marriage_year_match</a></code></li>
+<li><code><a title="python_gedcom_2.parser.Parser.parse" href="#python_gedcom_2.parser.Parser.parse">parse</a></code></li>
+<li><code><a title="python_gedcom_2.parser.Parser.parse_file" href="#python_gedcom_2.parser.Parser.parse_file">parse_file</a></code></li>
+<li><code><a title="python_gedcom_2.parser.Parser.print_gedcom" href="#python_gedcom_2.parser.Parser.print_gedcom">print_gedcom</a></code></li>
+<li><code><a title="python_gedcom_2.parser.Parser.save_gedcom" href="#python_gedcom_2.parser.Parser.save_gedcom">save_gedcom</a></code></li>
 </ul>
 </li>
 <li>
-<h4><code><a title="gedcom.parser.PointerNotFoundException" href="#gedcom.parser.PointerNotFoundException">PointerNotFoundException</a></code></h4>
+<h4><code><a title="python_gedcom_2.parser.PointerNotFoundException" href="#python_gedcom_2.parser.PointerNotFoundException">PointerNotFoundException</a></code></h4>
 </li>
 </ul>
 </li>

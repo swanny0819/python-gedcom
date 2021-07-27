@@ -3,7 +3,7 @@
 </p>
 
 <p style="text-align:center;">
-    <a href="https://pypi.org/project/python-gedcom-2/" target="_blank"><img src="https://img.shields.io/badge/Pypi%20version-1.3.0-blue.svg" alt="PyPI"></a>
+    <a href="https://pypi.org/project/python-gedcom-2/" target="_blank"><img src="https://img.shields.io/badge/Pypi%20version-1.4.0-blue.svg" alt="PyPI"></a>
     <img src="https://img.shields.io/badge/GEDCOM%20format%20version-5.5-yellowgreen.svg" alt="GEDCOM format version 5.5">
     <img src="https://img.shields.io/badge/Python%20versions-3.5%20to%203.9-yellowgreen.svg" alt="Python versions 3.5 to 3.9">
 </p>
@@ -48,7 +48,7 @@ Local development is done using [pyenv](https://github.com/pyenv/pyenv) and
 ### Generating docs
 
 1. Run `pipenv install -d` to install normal and dev dependencies
-1. Run `pipenv run pdoc3 --html -o docs/ gedcom --force` to generate docs into the `docs/` directory
+1. Run `pipenv run pdoc3 --html -o docs/ python_gedcom_2 --force` to generate docs into the `docs/` directory
 
 > To develop docs run `pipenv run pdoc3 --http localhost:8000 gedcom`
 > to watch files and instantly see changes in your browser under http://localhost:8000.
