@@ -24,6 +24,10 @@ class GedcomFormatViolationError(Exception):
     pass
 
 
+class PointerNotFoundException(Exception):
+    pass
+
+
 class Parser(object):
     """Parses and manipulates GEDCOM 5.5 format data
 
@@ -50,6 +54,17 @@ class Parser(object):
         """
         self.__element_list = []
         self.__element_dictionary = {}
+
+    def get_element_by_pointer(self, pointer):
+        """Returns the element that has the provided pointer. Raises an exception if that pointer doesn't exist.
+        :type pointer: string
+        :rtype: Element
+        """
+        element_dictionary = self.get_element_dictionary()
+        if pointer not in element_dictionary:
+            raise PointerNotFoundException("No element with the pointer " + pointer + " was found.")
+        else:
+            return element_dictionary[pointer]
 
     def get_element_list(self):
         """Returns a list containing all elements from within the GEDCOM file

@@ -6,7 +6,7 @@ from gedcom.element.object import ObjectElement
 from gedcom.element.individual import IndividualElement, NotAnActualIndividualError
 from gedcom.element.root import RootElement
 from gedcom.parser import Parser, GedcomFormatViolationError, FAMILY_MEMBERS_TYPE_PARENTS, FAMILY_MEMBERS_TYPE_HUSBAND, FAMILY_MEMBERS_TYPE_WIFE, \
-    FAMILY_MEMBERS_TYPE_CHILDREN
+    FAMILY_MEMBERS_TYPE_CHILDREN, PointerNotFoundException
 
 
 class TestParser(unittest.TestCase):
@@ -21,6 +21,32 @@ class TestParser(unittest.TestCase):
 
         self.assertEqual(32, len(parser.get_element_dictionary()))
         self.assertEqual(396, len(parser.get_element_list()))
+
+    def test_get_element_by_pointer__should_find_the_indicated_person(self):
+        file_lines = """
+            0 @I1@ INDI
+                1 NAME Patrick /Swanson/
+            0 @I2@ INDI
+                1 NAME Bob /Dole/
+        """
+        parser = Parser()
+        parser.parse(self._convert_gedcom_string_into_parsable_content(file_lines), strict=False)
+        element = parser.get_element_by_pointer("@I2@")
+        self.assertIsNotNone(element)
+        self.assertTrue(isinstance(element, IndividualElement))
+        # noinspection PyUnresolvedReferences
+        self.assertEqual(('Bob', 'Dole'), element.get_name())
+
+    def test_get_element_by_pointer__should_raise_an_exception_when_it_cannot_find_the_indicated_person(self):
+        file_lines = """
+            0 @I1@ INDI
+                1 NAME Patrick /Swanson/
+            0 @I2@ INDI
+                1 NAME Bob /Dole/
+        """
+        parser = Parser()
+        parser.parse(self._convert_gedcom_string_into_parsable_content(file_lines), strict=False)
+        self.assertRaises(PointerNotFoundException, parser.get_element_by_pointer, "@I3@")
 
     def test_get_root_element(self):
         parser = Parser()
