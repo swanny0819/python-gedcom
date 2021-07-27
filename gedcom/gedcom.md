@@ -3,7 +3,7 @@
 The module can be installed via [pipenv](https://github.com/pypa/pipenv) or simply [pip](https://pip.pypa.io/).
 
 Run `pip3 install python-gedcom` to install or `pip3 install python-gedcom --upgrade`
-to upgrade to the newest version uploaded to the [PyPI repository](https://pypi.org/project/python-gedcom2/).
+to upgrade to the newest version uploaded to the [PyPI repository](https://pypi.org/project/python-gedcom-2/).
 
 .. tip::
    Using [pipenv](https://github.com/pypa/pipenv) simplifies the installation and maintenance of dependencies.

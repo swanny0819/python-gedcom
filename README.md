@@ -3,7 +3,7 @@
 </p>
 
 <p style="text-align:center;">
-    <a href="https://pypi.org/project/python-gedcom2/" target="_blank"><img src="https://img.shields.io/badge/Pypi%20version-1.0.0-blue.svg" alt="PyPI"></a>
+    <a href="https://pypi.org/project/python-gedcom-2/" target="_blank"><img src="https://img.shields.io/badge/Pypi%20version-1.3.0-blue.svg" alt="PyPI"></a>
     <img src="https://img.shields.io/badge/GEDCOM%20format%20version-5.5-yellowgreen.svg" alt="GEDCOM format version 5.5">
     <img src="https://img.shields.io/badge/Python%20versions-3.5%20to%203.9-yellowgreen.svg" alt="Python versions 3.5 to 3.9">
 </p>
