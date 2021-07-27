@@ -1,6 +1,7 @@
 exclude MANIFEST.in
 
 # Include the README. the CHANGELOG, and the LOGO
+include logo.png
 include *.md
 
 # Include the license file
@@ -11,7 +12,6 @@ include Pipfile
 include Pipfile.lock
 
 # Docs
-exclude logo.png
 exclude docs
 recursive-exclude docs *
 recursive-exclude gedcom *.md
