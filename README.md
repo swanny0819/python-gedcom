@@ -3,9 +3,10 @@
 </p>
 
 <p style="text-align:center;">
-    <a href="https://pypi.org/project/python-gedcom-2/" target="_blank"><img src="https://img.shields.io/badge/Pypi%20version-1.4.0-blue.svg" alt="PyPI"></a>
+    <a href="https://pypi.org/project/python-gedcom-2/" target="_blank"><img src="https://img.shields.io/pypi/v/python_gedcom_2" alt="Latest Version"></a>
     <img src="https://img.shields.io/badge/GEDCOM%20format%20version-5.5-yellowgreen.svg" alt="GEDCOM format version 5.5">
     <img src="https://img.shields.io/badge/Python%20versions-3.5%20to%203.9-yellowgreen.svg" alt="Python versions 3.5 to 3.9">
+    <img src="https://img.shields.io/github/license/swanny0819/python-gedcom-2" alt="Licensing">
 </p>
 
 <p style="text-align:center;">
