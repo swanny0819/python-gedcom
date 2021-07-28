@@ -1,6 +1,8 @@
 """GEDCOM element consisting of tag `gedcom.tags.GEDCOM_TAG_INDIVIDUAL`"""
 
 import re as regex
+
+from python_gedcom_2.element.date import DateElement
 from python_gedcom_2.element.element import Element
 from python_gedcom_2.helpers import deprecated
 import python_gedcom_2.tags
@@ -161,21 +163,15 @@ class IndividualElement(Element):
         return self.__get_data_for_date_bearing_tag(python_gedcom_2.tags.GEDCOM_TAG_DEATH)
 
     def __get_year_in_tag_type(self, tag):
-        date = ""
+        date = -1
 
         for child in self.get_child_elements():
             if child.get_tag() == tag:
                 for childOfChild in child.get_child_elements():
-                    if childOfChild.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_DATE:
-                        date_split = childOfChild.get_value().split()
-                        date = date_split[len(date_split) - 1]
+                    if isinstance(childOfChild, DateElement):
+                        date = childOfChild.get_year()
 
-        if date == "":
-            return -1
-        try:
-            return int(date)
-        except ValueError:
-            return -1
+        return date
 
     def get_birth_year(self):
         """Returns the birth year of a person in integer format

@@ -178,12 +178,14 @@ class Element(object):
         :type value: str
         :rtype: Element
         """
+        from python_gedcom_2.element.date import DateElement
         from python_gedcom_2.element.family import FamilyElement
         from python_gedcom_2.element.file import FileElement
         from python_gedcom_2.element.individual import IndividualElement
         from python_gedcom_2.element.object import ObjectElement
 
         tag_element_dict = {
+            python_gedcom_2.tags.GEDCOM_TAG_DATE: DateElement,
             python_gedcom_2.tags.GEDCOM_TAG_FAMILY: FamilyElement,
             python_gedcom_2.tags.GEDCOM_TAG_FILE: FileElement,
             python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL: IndividualElement,

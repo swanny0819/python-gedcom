@@ -36,6 +36,8 @@ which can in return be manipulated.
 
 import re as regex
 from sys import version_info
+
+from python_gedcom_2.element.date import DateElement
 from python_gedcom_2.element.element import Element
 from python_gedcom_2.element.family import FamilyElement, NotAnActualFamilyError
 from python_gedcom_2.element.file import FileElement
@@ -263,14 +265,16 @@ class Parser(object):
             raise GedcomFormatViolationError(error_message)
 
         # Create element. Store in list and dict, create children and parents.
-        if tag == python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL:
-            element = IndividualElement(level, pointer, tag, value, crlf, multi_line=False)
-        elif tag == python_gedcom_2.tags.GEDCOM_TAG_FAMILY:
-            element = FamilyElement(level, pointer, tag, value, crlf, multi_line=False)
-        elif tag == python_gedcom_2.tags.GEDCOM_TAG_FILE:
-            element = FileElement(level, pointer, tag, value, crlf, multi_line=False)
-        elif tag == python_gedcom_2.tags.GEDCOM_TAG_OBJECT:
-            element = ObjectElement(level, pointer, tag, value, crlf, multi_line=False)
+        tag_element_dict = {
+            python_gedcom_2.tags.GEDCOM_TAG_DATE: DateElement,
+            python_gedcom_2.tags.GEDCOM_TAG_FAMILY: FamilyElement,
+            python_gedcom_2.tags.GEDCOM_TAG_FILE: FileElement,
+            python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL: IndividualElement,
+            python_gedcom_2.tags.GEDCOM_TAG_OBJECT: ObjectElement,
+        }
+
+        if tag in tag_element_dict:
+            element = tag_element_dict[tag](level, pointer, tag, value, crlf, multi_line=False)
         else:
             element = Element(level, pointer, tag, value, crlf, multi_line=False)
 
@@ -838,14 +842,16 @@ class Parser(object):
             raise GedcomFormatViolationError(error_message)
 
         # Create element. Store in list and dict, create children and parents.
-        if tag == python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL:
-            element = IndividualElement(level, pointer, tag, value, crlf, multi_line=False)
-        elif tag == python_gedcom_2.tags.GEDCOM_TAG_FAMILY:
-            element = FamilyElement(level, pointer, tag, value, crlf, multi_line=False)
-        elif tag == python_gedcom_2.tags.GEDCOM_TAG_FILE:
-            element = FileElement(level, pointer, tag, value, crlf, multi_line=False)
-        elif tag == python_gedcom_2.tags.GEDCOM_TAG_OBJECT:
-            element = ObjectElement(level, pointer, tag, value, crlf, multi_line=False)
+        tag_element_dict = {
+            python_gedcom_2.tags.GEDCOM_TAG_DATE: DateElement,
+            python_gedcom_2.tags.GEDCOM_TAG_FAMILY: FamilyElement,
+            python_gedcom_2.tags.GEDCOM_TAG_FILE: FileElement,
+            python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL: IndividualElement,
+            python_gedcom_2.tags.GEDCOM_TAG_OBJECT: ObjectElement,
+        }
+
+        if tag in tag_element_dict:
+            element = tag_element_dict[tag](level, pointer, tag, value, crlf, multi_line=False)
         else:
             element = Element(level, pointer, tag, value, crlf, multi_line=False)
 
