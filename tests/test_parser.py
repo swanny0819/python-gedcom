@@ -709,6 +709,89 @@ class TestParser(unittest.TestCase):
         self.assertEqual("@I3@", parents[1].get_pointer())
         self.assertEqual("@I4@", parents[2].get_pointer())
         self.assertEqual("@I5@", parents[3].get_pointer())
+    # ----------------- TESTS FOR get_children --------------------------
+
+    _file_lines_for_get_children_testing = """
+        0 @I1@ INDI
+            1 NAME Patrick /Swanson/
+            1 FAMS @F1@
+        0 @I2@ INDI
+            1 NAME Ashley /Williams/
+            1 FAMS @F1@
+        0 @I3@ INDI
+            1 NAME First /Swanson/
+            1 FAMC @F1@
+        0 @I4@ INDI
+            1 NAME Second /Swanson/
+            1 FAMC @F1@
+        0 @I5@ INDI
+            1 NAME Third /Swanson/
+            1 FAMC @F1@
+        0 @I6@ INDI
+            1 NAME Fourth /Swanson/
+            1 FAMC @F1@
+        0 @F1@ FAM
+            1 HUSB @I1@
+            1 WIFE @I2@
+            1 CHIL @I3@
+                2 _FREL Natural
+                2 _MREL Natural
+            1 CHIL @I4@
+                2 _FREL Natural
+                2 _MREL Adopted
+            1 CHIL @I5@
+                2 _FREL Adopted
+                2 _MREL Natural
+            1 CHIL @I6@
+                2 _FREL Adopted
+                2 _MREL Adopted
+    """
+
+    def test_get_children__should_raise_an_error_when_something_that_is_not_a_person_is_passed_in(self):
+        parser = Parser()
+        parser.parse(self._convert_gedcom_string_into_parsable_content(self._file_lines_for_get_children_testing))
+        parent = parser.get_element_by_pointer("@F1@")
+        self.assertRaises(NotAnActualIndividualError, parser.get_children, parent)
+
+    def test_get_children__should_find_all_children_when_looking_for_children_of_all_types(self):
+        parser = Parser()
+        parser.parse(self._convert_gedcom_string_into_parsable_content(self._file_lines_for_get_children_testing))
+        parent = parser.get_element_by_pointer("@I1@")
+        # noinspection PyTypeChecker
+        children = parser.get_children(parent)
+        self.assertEqual(4, len(children))
+
+    def test_get_children__should_find_only_natural_children_when_looking_for_only_natural_children_of_the_husband(self):
+        parser = Parser()
+        parser.parse(self._convert_gedcom_string_into_parsable_content(self._file_lines_for_get_children_testing))
+        parent = parser.get_element_by_pointer("@I1@")
+        # noinspection PyTypeChecker
+        children = parser.get_children(parent, child_type="NAT")
+        self.assertEqual(2, len(children))
+        self.assertEqual(('First', 'Swanson'), children[0].get_name())
+        self.assertEqual(('Second', 'Swanson'), children[1].get_name())
+
+    def test_get_children__should_find_only_natural_children_when_looking_for_only_natural_children_of_the_wife(self):
+        parser = Parser()
+        parser.parse(self._convert_gedcom_string_into_parsable_content(self._file_lines_for_get_children_testing))
+        parent = parser.get_element_by_pointer("@I2@")
+        # noinspection PyTypeChecker
+        children = parser.get_children(parent, child_type="NAT")
+        self.assertEqual(2, len(children))
+        self.assertEqual(('First', 'Swanson'), children[0].get_name())
+        self.assertEqual(('Third', 'Swanson'), children[1].get_name())
+
+    def test_get_children__should_gracefully_handle_being_given_an_individual_that_is_not_in_a_family(self):
+        file_lines = """
+            0 @I1@ INDI
+                1 NAME Patrick /Swanson/
+        """
+        parser = Parser()
+        parser.parse(self._convert_gedcom_string_into_parsable_content(file_lines))
+        parent = parser.get_element_by_pointer("@I1@")
+        # noinspection PyTypeChecker
+        children = parser.get_children(parent, child_type="NAT")
+        self.assertEqual(0, len(children))
 
     # ------------------- START OF find_path_to_ancestor TESTING ----------------
 

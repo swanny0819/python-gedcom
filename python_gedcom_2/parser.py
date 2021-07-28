@@ -435,6 +435,46 @@ class Parser(object):
 
         return parents
 
+    def get_children(self, individual, child_type="ALL"):
+        """Return elements corresponding to children of an individual.
+
+        Optional child_type. Default "ALL" returns all children. "NAT" can be
+        used to specify only natural (genetic) children.
+
+        :type individual: IndividualElement
+        :type child_type: str
+        :rtype: list of IndividualElement
+        """
+        if not isinstance(individual, IndividualElement):
+            raise NotAnActualIndividualError(
+                "Operation only valid for elements with %s tag" % python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL
+            )
+
+        children = []
+        families = self.get_families(individual, python_gedcom_2.tags.GEDCOM_TAG_FAMILY_SPOUSE)
+
+        for family in families:
+            if child_type == "NAT":
+                # Find our relationship to the children - is this parent male or female?
+                type_of_our_individual = None
+                for family_member in family.get_child_elements():  # Will look like "1 HUSB @I1@", "1 WIFE @I2@", or "1 CHIL @I3@"
+                    if family_member.get_value() == individual.get_pointer():
+                        if family_member.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_WIFE:
+                            type_of_our_individual = python_gedcom_2.tags.GEDCOM_PROGRAM_DEFINED_TAG_MREL
+                        elif family_member.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_HUSBAND:
+                            type_of_our_individual = python_gedcom_2.tags.GEDCOM_PROGRAM_DEFINED_TAG_FREL
+
+                for family_member in family.get_child_elements():  # Will look like "1 HUSB @I1@", "1 WIFE @I2@", or "1 CHIL @I3@"
+                    if family_member.get_tag() == python_gedcom_2.tags.GEDCOM_TAG_CHILD:
+                        for child in family_member.get_child_elements():
+                            if child.get_value() == "Natural":
+                                if child.get_tag() == type_of_our_individual:
+                                    children.append(self.get_element_by_pointer(family_member.get_value()))
+            else:
+                children += self.get_family_members(family, python_gedcom_2.tags.GEDCOM_TAG_CHILD)
+
+        return children
+
     def find_path_to_ancestor(self, descendant, ancestor, path=None):
         """Return path from descendant to ancestor
         :rtype: object
