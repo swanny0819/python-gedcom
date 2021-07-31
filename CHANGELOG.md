@@ -1,5 +1,29 @@
 # Python GEDCOM Parser - Changelog
 
+## [v1.7.0](https://pypi.org/project/python-gedcom-2/1.7.0/)
+### Changes:
+- Add all element classes that can have DateElements in them.
+- Add EventDetail class to allow inheritance of .get_year_in_date for all new classes.
+
+## [v1.6.0](https://pypi.org/project/python-gedcom-2/1.6.0/)
+### Changes:
+- Add DateElement - now you can directly and easily get date-related info from a date node in a parsed GEDCOM file.
+
+## [v1.5.0](https://pypi.org/project/python-gedcom-2/1.5.0/)
+### Changes:
+- Add Parser.get_children() - gets 
+
+## [v1.4.0](https://pypi.org/project/python-gedcom-2/1.4.0/)
+### Changes:
+- Change top-level package name from gedcom (Which IntelliJ was complaining about) to python_gedcom_2.
+
+## [v1.3.0](https://pypi.org/project/python-gedcom-2/1.3.0/)
+### Changes:
+- Add Parser.get_element_by_pointer method to more easily access elements that we know are there.
+- Fix #4 IndividualElement.criteria_match validity checking fails to catch bad criteria
+- Fix #3: Parser.find_path_to_ancestor has a bad check for validity of arguments
+- Fix #2: Parser.get_ancestors does not pass down the ancestor_type
+
 ## [v1.0.0](https://github.com/nickreynke/python-gedcom/releases/tag/v1.0.0)
 
 ### Changes:

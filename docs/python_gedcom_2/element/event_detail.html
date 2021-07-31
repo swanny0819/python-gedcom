@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>python_gedcom_2.element.event_detail API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>python_gedcom_2.element.event_detail</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from python_gedcom_2.element.date import DateElement
+from python_gedcom_2.element.element import Element
+
+
+class EventDetail(Element):
+    &#34;&#34;&#34;
+    An EventDetail can be one of many kinds of actual Element. This is an abstract class to contain a lot of shared methods.
+    (See page 29 of the GEDCOM 5.5 spec for details)
+    NOTE: This is different from an event element, which is a legitimate GEDCOM tag and has its own rules.
+    &#34;&#34;&#34;
+
+    def get_year_in_date(self):
+        date = -1
+
+        for child in self.get_child_elements():
+            if isinstance(child, DateElement):
+                date = child.get_year()
+
+        return date</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="python_gedcom_2.element.event_detail.EventDetail"><code class="flex name class">
+<span>class <span class="ident">EventDetail</span></span>
+<span>(</span><span>level, pointer, tag, value, crlf='\n', multi_line=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>An EventDetail can be one of many kinds of actual Element. This is an abstract class to contain a lot of shared methods.
+(See page 29 of the GEDCOM 5.5 spec for details)
+NOTE: This is different from an event element, which is a legitimate GEDCOM tag and has its own rules.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class EventDetail(Element):
+    &#34;&#34;&#34;
+    An EventDetail can be one of many kinds of actual Element. This is an abstract class to contain a lot of shared methods.
+    (See page 29 of the GEDCOM 5.5 spec for details)
+    NOTE: This is different from an event element, which is a legitimate GEDCOM tag and has its own rules.
+    &#34;&#34;&#34;
+
+    def get_year_in_date(self):
+        date = -1
+
+        for child in self.get_child_elements():
+            if isinstance(child, DateElement):
+                date = child.get_year()
+
+        return date</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="python_gedcom_2.element.element.Element" href="element.html#python_gedcom_2.element.element.Element">Element</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="python_gedcom_2.element.adoption.AdoptionElement" href="adoption.html#python_gedcom_2.element.adoption.AdoptionElement">AdoptionElement</a></li>
+<li><a title="python_gedcom_2.element.adult_christening.AdultChristeningElement" href="adult_christening.html#python_gedcom_2.element.adult_christening.AdultChristeningElement">AdultChristeningElement</a></li>
+<li><a title="python_gedcom_2.element.annulment.AnnulmentElement" href="annulment.html#python_gedcom_2.element.annulment.AnnulmentElement">AnnulmentElement</a></li>
+<li><a title="python_gedcom_2.element.baptism.BaptismElement" href="baptism.html#python_gedcom_2.element.baptism.BaptismElement">BaptismElement</a></li>
+<li><a title="python_gedcom_2.element.bar_mitzvah.BarMitzvahElement" href="bar_mitzvah.html#python_gedcom_2.element.bar_mitzvah.BarMitzvahElement">BarMitzvahElement</a></li>
+<li><a title="python_gedcom_2.element.bas_mitzvah.BasMitzvahElement" href="bas_mitzvah.html#python_gedcom_2.element.bas_mitzvah.BasMitzvahElement">BasMitzvahElement</a></li>
+<li><a title="python_gedcom_2.element.birth.BirthElement" href="birth.html#python_gedcom_2.element.birth.BirthElement">BirthElement</a></li>
+<li><a title="python_gedcom_2.element.blessing.BlessingElement" href="blessing.html#python_gedcom_2.element.blessing.BlessingElement">BlessingElement</a></li>
+<li><a title="python_gedcom_2.element.burial.BurialElement" href="burial.html#python_gedcom_2.element.burial.BurialElement">BurialElement</a></li>
+<li><a title="python_gedcom_2.element.caste.CasteElement" href="caste.html#python_gedcom_2.element.caste.CasteElement">CasteElement</a></li>
+<li><a title="python_gedcom_2.element.census.CensusElement" href="census.html#python_gedcom_2.element.census.CensusElement">CensusElement</a></li>
+<li><a title="python_gedcom_2.element.children_count.ChildrenCountElement" href="children_count.html#python_gedcom_2.element.children_count.ChildrenCountElement">ChildrenCountElement</a></li>
+<li><a title="python_gedcom_2.element.christening.ChristeningElement" href="christening.html#python_gedcom_2.element.christening.ChristeningElement">ChristeningElement</a></li>
+<li><a title="python_gedcom_2.element.confirmation.ConfirmationElement" href="confirmation.html#python_gedcom_2.element.confirmation.ConfirmationElement">ConfirmationElement</a></li>
+<li><a title="python_gedcom_2.element.cremation.CremationElement" href="cremation.html#python_gedcom_2.element.cremation.CremationElement">CremationElement</a></li>
+<li><a title="python_gedcom_2.element.death.DeathElement" href="death.html#python_gedcom_2.element.death.DeathElement">DeathElement</a></li>
+<li><a title="python_gedcom_2.element.divorce.DivorceElement" href="divorce.html#python_gedcom_2.element.divorce.DivorceElement">DivorceElement</a></li>
+<li><a title="python_gedcom_2.element.divorce_filed.DivorceFiledElement" href="divorce_filed.html#python_gedcom_2.element.divorce_filed.DivorceFiledElement">DivorceFiledElement</a></li>
+<li><a title="python_gedcom_2.element.education.EducationElement" href="education.html#python_gedcom_2.element.education.EducationElement">EducationElement</a></li>
+<li><a title="python_gedcom_2.element.emigration.EmigrationElement" href="emigration.html#python_gedcom_2.element.emigration.EmigrationElement">EmigrationElement</a></li>
+<li><a title="python_gedcom_2.element.engagement.EngagementElement" href="engagement.html#python_gedcom_2.element.engagement.EngagementElement">EngagementElement</a></li>
+<li><a title="python_gedcom_2.element.event.EventElement" href="event.html#python_gedcom_2.element.event.EventElement">EventElement</a></li>
+<li><a title="python_gedcom_2.element.first_communion.FirstCommunionElement" href="first_communion.html#python_gedcom_2.element.first_communion.FirstCommunionElement">FirstCommunionElement</a></li>
+<li><a title="python_gedcom_2.element.graduation.GraduationElement" href="graduation.html#python_gedcom_2.element.graduation.GraduationElement">GraduationElement</a></li>
+<li><a title="python_gedcom_2.element.identification_number.IdentificationNumberElement" href="identification_number.html#python_gedcom_2.element.identification_number.IdentificationNumberElement">IdentificationNumberElement</a></li>
+<li><a title="python_gedcom_2.element.immigration.ImmigrationElement" href="immigration.html#python_gedcom_2.element.immigration.ImmigrationElement">ImmigrationElement</a></li>
+<li><a title="python_gedcom_2.element.marriage.MarriageElement" href="marriage.html#python_gedcom_2.element.marriage.MarriageElement">MarriageElement</a></li>
+<li><a title="python_gedcom_2.element.marriage_bann.MarriageBannElement" href="marriage_bann.html#python_gedcom_2.element.marriage_bann.MarriageBannElement">MarriageBannElement</a></li>
+<li><a title="python_gedcom_2.element.marriage_contract.MarriageContractElement" href="marriage_contract.html#python_gedcom_2.element.marriage_contract.MarriageContractElement">MarriageContractElement</a></li>
+<li><a title="python_gedcom_2.element.marriage_count.MarriageCountElement" href="marriage_count.html#python_gedcom_2.element.marriage_count.MarriageCountElement">MarriageCountElement</a></li>
+<li><a title="python_gedcom_2.element.marriage_license.MarriageLicenseElement" href="marriage_license.html#python_gedcom_2.element.marriage_license.MarriageLicenseElement">MarriageLicenseElement</a></li>
+<li><a title="python_gedcom_2.element.marriage_settlement.MarriageSettlementElement" href="marriage_settlement.html#python_gedcom_2.element.marriage_settlement.MarriageSettlementElement">MarriageSettlementElement</a></li>
+<li><a title="python_gedcom_2.element.nationality.NationalityElement" href="nationality.html#python_gedcom_2.element.nationality.NationalityElement">NationalityElement</a></li>
+<li><a title="python_gedcom_2.element.naturalization.NaturalizationElement" href="naturalization.html#python_gedcom_2.element.naturalization.NaturalizationElement">NaturalizationElement</a></li>
+<li><a title="python_gedcom_2.element.occupation.OccupationElement" href="occupation.html#python_gedcom_2.element.occupation.OccupationElement">OccupationElement</a></li>
+<li><a title="python_gedcom_2.element.ordinance.OrdinanceElement" href="ordinance.html#python_gedcom_2.element.ordinance.OrdinanceElement">OrdinanceElement</a></li>
+<li><a title="python_gedcom_2.element.ordination.OrdinationElement" href="ordination.html#python_gedcom_2.element.ordination.OrdinationElement">OrdinationElement</a></li>
+<li><a title="python_gedcom_2.element.physical_description.PhysicalDescriptionElement" href="physical_description.html#python_gedcom_2.element.physical_description.PhysicalDescriptionElement">PhysicalDescriptionElement</a></li>
+<li><a title="python_gedcom_2.element.probate.ProbateElement" href="probate.html#python_gedcom_2.element.probate.ProbateElement">ProbateElement</a></li>
+<li><a title="python_gedcom_2.element.property.PropertyElement" href="property.html#python_gedcom_2.element.property.PropertyElement">PropertyElement</a></li>
+<li><a title="python_gedcom_2.element.religion.ReligionElement" href="religion.html#python_gedcom_2.element.religion.ReligionElement">ReligionElement</a></li>
+<li><a title="python_gedcom_2.element.residence.ResidenceElement" href="residence.html#python_gedcom_2.element.residence.ResidenceElement">ResidenceElement</a></li>
+<li><a title="python_gedcom_2.element.retirement.RetirementElement" href="retirement.html#python_gedcom_2.element.retirement.RetirementElement">RetirementElement</a></li>
+<li><a title="python_gedcom_2.element.social_security_number.SocialSecurityNumberElement" href="social_security_number.html#python_gedcom_2.element.social_security_number.SocialSecurityNumberElement">SocialSecurityNumberElement</a></li>
+<li><a title="python_gedcom_2.element.title.TitleElement" href="title.html#python_gedcom_2.element.title.TitleElement">TitleElement</a></li>
+<li><a title="python_gedcom_2.element.will.WillElement" href="will.html#python_gedcom_2.element.will.WillElement">WillElement</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="python_gedcom_2.element.event_detail.EventDetail.get_year_in_date"><code class="name flex">
+<span>def <span class="ident">get_year_in_date</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_year_in_date(self):
+    date = -1
+
+    for child in self.get_child_elements():
+        if isinstance(child, DateElement):
+            date = child.get_year()
+
+    return date</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="python_gedcom_2.element.element.Element" href="element.html#python_gedcom_2.element.element.Element">Element</a></b></code>:
+<ul class="hlist">
+<li><code><a title="python_gedcom_2.element.element.Element.add_child_element" href="element.html#python_gedcom_2.element.element.Element.add_child_element">add_child_element</a></code></li>
+<li><code><a title="python_gedcom_2.element.element.Element.get_child_elements" href="element.html#python_gedcom_2.element.element.Element.get_child_elements">get_child_elements</a></code></li>
+<li><code><a title="python_gedcom_2.element.element.Element.get_individual" href="element.html#python_gedcom_2.element.element.Element.get_individual">get_individual</a></code></li>
+<li><code><a title="python_gedcom_2.element.element.Element.get_level" href="element.html#python_gedcom_2.element.element.Element.get_level">get_level</a></code></li>
+<li><code><a title="python_gedcom_2.element.element.Element.get_multi_line_value" href="element.html#python_gedcom_2.element.element.Element.get_multi_line_value">get_multi_line_value</a></code></li>
+<li><code><a title="python_gedcom_2.element.element.Element.get_parent_element" href="element.html#python_gedcom_2.element.element.Element.get_parent_element">get_parent_element</a></code></li>
+<li><code><a title="python_gedcom_2.element.element.Element.get_pointer" href="element.html#python_gedcom_2.element.element.Element.get_pointer">get_pointer</a></code></li>
+<li><code><a title="python_gedcom_2.element.element.Element.get_tag" href="element.html#python_gedcom_2.element.element.Element.get_tag">get_tag</a></code></li>
+<li><code><a title="python_gedcom_2.element.element.Element.get_value" href="element.html#python_gedcom_2.element.element.Element.get_value">get_value</a></code></li>
+<li><code><a title="python_gedcom_2.element.element.Element.new_child_element" href="element.html#python_gedcom_2.element.element.Element.new_child_element">new_child_element</a></code></li>
+<li><code><a title="python_gedcom_2.element.element.Element.set_multi_line_value" href="element.html#python_gedcom_2.element.element.Element.set_multi_line_value">set_multi_line_value</a></code></li>
+<li><code><a title="python_gedcom_2.element.element.Element.set_parent_element" href="element.html#python_gedcom_2.element.element.Element.set_parent_element">set_parent_element</a></code></li>
+<li><code><a title="python_gedcom_2.element.element.Element.set_value" href="element.html#python_gedcom_2.element.element.Element.set_value">set_value</a></code></li>
+<li><code><a title="python_gedcom_2.element.element.Element.to_gedcom_string" href="element.html#python_gedcom_2.element.element.Element.to_gedcom_string">to_gedcom_string</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="python_gedcom_2.element" href="index.html">python_gedcom_2.element</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="python_gedcom_2.element.event_detail.EventDetail" href="#python_gedcom_2.element.event_detail.EventDetail">EventDetail</a></code></h4>
+<ul class="">
+<li><code><a title="python_gedcom_2.element.event_detail.EventDetail.get_year_in_date" href="#python_gedcom_2.element.event_detail.EventDetail.get_year_in_date">get_year_in_date</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>

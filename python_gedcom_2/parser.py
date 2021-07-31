@@ -6,12 +6,11 @@ which can in return be manipulated.
 import re as regex
 from sys import version_info
 
-from python_gedcom_2.element.date import DateElement
+from python_gedcom_2.element_creator import ElementCreator
+
 from python_gedcom_2.element.element import Element
 from python_gedcom_2.element.family import FamilyElement, NotAnActualFamilyError
-from python_gedcom_2.element.file import FileElement
 from python_gedcom_2.element.individual import IndividualElement, NotAnActualIndividualError
-from python_gedcom_2.element.object import ObjectElement
 from python_gedcom_2.element.root import RootElement
 import python_gedcom_2.tags
 
@@ -233,19 +232,7 @@ class Parser(object):
                              + "\nSee: https://chronoplexsoftware.com/gedcomvalidator/gedcom/gedcom-5.5.pdf")
             raise GedcomFormatViolationError(error_message)
 
-        # Create element. Store in list and dict, create children and parents.
-        tag_element_dict = {
-            python_gedcom_2.tags.GEDCOM_TAG_DATE: DateElement,
-            python_gedcom_2.tags.GEDCOM_TAG_FAMILY: FamilyElement,
-            python_gedcom_2.tags.GEDCOM_TAG_FILE: FileElement,
-            python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL: IndividualElement,
-            python_gedcom_2.tags.GEDCOM_TAG_OBJECT: ObjectElement,
-        }
-
-        if tag in tag_element_dict:
-            element = tag_element_dict[tag](level, pointer, tag, value, crlf, multi_line=False)
-        else:
-            element = Element(level, pointer, tag, value, crlf, multi_line=False)
+        element = ElementCreator.create_element(level, pointer, tag, value, crlf, is_multiline=False)
 
         # Start with last element as parent, back up if necessary.
         parent_element = last_element

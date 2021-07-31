@@ -3,6 +3,8 @@ Base GEDCOM element
 """
 
 from sys import version_info
+
+from python_gedcom_2.element_creator import ElementCreator
 from python_gedcom_2.helpers import deprecated
 import python_gedcom_2.tags
 
@@ -178,27 +180,8 @@ class Element(object):
         :type value: str
         :rtype: Element
         """
-        from python_gedcom_2.element.date import DateElement
-        from python_gedcom_2.element.family import FamilyElement
-        from python_gedcom_2.element.file import FileElement
-        from python_gedcom_2.element.individual import IndividualElement
-        from python_gedcom_2.element.object import ObjectElement
-
-        tag_element_dict = {
-            python_gedcom_2.tags.GEDCOM_TAG_DATE: DateElement,
-            python_gedcom_2.tags.GEDCOM_TAG_FAMILY: FamilyElement,
-            python_gedcom_2.tags.GEDCOM_TAG_FILE: FileElement,
-            python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL: IndividualElement,
-            python_gedcom_2.tags.GEDCOM_TAG_OBJECT: ObjectElement,
-        }
-
-        if tag in tag_element_dict:
-            child_element = tag_element_dict[tag](self.get_level() + 1, pointer, tag, value, self.__crlf)
-        else:
-            child_element = Element(self.get_level() + 1, pointer, tag, value, self.__crlf)
-
+        child_element = ElementCreator.create_element(self.get_level() + 1, pointer, tag, value, self.__crlf)
         self.add_child_element(child_element)
-
         return child_element
 
     def add_child_element(self, element):

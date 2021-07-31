@@ -24,7 +24,7 @@ Documentation can be found here: https://swanny0819.github.io/python-gedcom-2/ge
 
 ## Changelog
 
-For the latest changes please have a look at the [`CHANGELOG.md`](CHANGELOG.md) file.
+For the latest changes please have a look at the [`CHANGELOG.md`](https://github.com/swanny0819/python-gedcom-2/blob/master/CHANGELOG.md) file.
 
 ## Common problems
 

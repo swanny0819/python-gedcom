@@ -302,8 +302,15 @@ GEDCOM_TAG_DIVORCE_FILED = "DIVF"
 An event of filing for a divorce by a spouse.
 """
 
+GEDCOM_TAG_PHYSICAL_DESCRIPTION = "DSCR"
+"""Value: `DSCR`
+
+The physical characteristics of a person, place, or thing.
+"""
+
 GEDCOM_TAG_PHY_DESCRIPTION = "DSCR"
 """Value: `DSCR`
+::deprecated:: As of version 1.7.0 use `GEDCOM_TAG_PHYSICAL_DESCRIPTION` method instead
 
 The physical characteristics of a person, place, or thing.
 """
@@ -444,6 +451,13 @@ An individual in the family role of a married man or father.
 
 GEDCOM_TAG_IDENT_NUMBER = "IDNO"
 """Value: `IDNO`
+::deprecated:: As of version 1.7.0 use `GEDCOM_TAG_IDENTIFICATION_NUMBER` method instead
+
+A number assigned to identify a person within some significant external system.
+"""
+
+GEDCOM_TAG_IDENTIFICATION_NUMBER = "IDNO"
+"""Value: `IDNO`
 
 A number assigned to identify a person within some significant external system.
 """
@@ -494,9 +508,18 @@ GEDCOM_TAG_MARRIAGE_BANN = "MARB"
 """Value: `MARB`
 
 An event of an official public notice given that two people intend to marry.
+Where the term comes from: https://en.wikipedia.org/wiki/Banns_of_marriage
 """
 
 GEDCOM_TAG_MARR_CONTRACT = "MARC"
+"""Value: `MARC`
+::deprecated:: As of version 1.7.0 use `GEDCOM_TAG_MARRIAGE_CONTRACT` method instead
+
+An event of recording a formal agreement of marriage, including the prenuptial agreement in which marriage partners reach 
+agreement about the property rights of one or both, securing property to their children.
+"""
+
+GEDCOM_TAG_MARRIAGE_CONTRACT = "MARC"
 """Value: `MARC`
 
 An event of recording a formal agreement of marriage, including the prenuptial agreement in which marriage partners reach 
@@ -504,6 +527,13 @@ agreement about the property rights of one or both, securing property to their c
 """
 
 GEDCOM_TAG_MARR_LICENSE = "MARL"
+"""Value: `MARL`
+::deprecated:: As of version 1.7.0 use `GEDCOM_TAG_MARRIAGE_LICENSE` method instead
+
+An event of obtaining a legal license to marry.
+"""
+
+GEDCOM_TAG_MARRIAGE_LICENSE = "MARL"
 """Value: `MARL`
 
 An event of obtaining a legal license to marry.
@@ -516,6 +546,14 @@ A legal, common-law, or customary event of creating a family unit of a man and a
 """
 
 GEDCOM_TAG_MARR_SETTLEMENT = "MARS"
+"""Value: `MARS`
+::deprecated:: As of version 1.7.0 use `GEDCOM_TAG_MARRIAGE_SETTLEMENT` method instead
+
+An event of creating an agreement between two people contemplating marriage, at which time they agree to release or modify 
+property rights that would otherwise arise from the marriage.
+"""
+
+GEDCOM_TAG_MARRIAGE_SETTLEMENT = "MARS"
 """Value: `MARS`
 
 An event of creating an agreement between two people contemplating marriage, at which time they agree to release or modify 
@@ -773,8 +811,15 @@ GEDCOM_TAG_SURN_PREFIX = "SPFX"
 A name piece used as a non-indexing pre-part of a surname.
 """
 
+GEDCOM_TAG_SOCIAL_SECURITY_NUMBER = "SSN"
+"""Value: `SSN`
+
+A number assigned by the United States Social Security Administration. Used for tax identification purposes.
+"""
+
 GEDCOM_TAG_SOC_SEC_NUMBER = "SSN"
 """Value: `SSN`
+::deprecated:: As of version 1.7.0 use `GEDCOM_TAG_SOCIAL_SECURITY_NUMBER` method instead
 
 A number assigned by the United States Social Security Administration. Used for tax identification purposes.
 """

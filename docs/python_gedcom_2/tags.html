@@ -331,8 +331,15 @@ GEDCOM_TAG_DIVORCE_FILED = &#34;DIVF&#34;
 An event of filing for a divorce by a spouse.
 &#34;&#34;&#34;
 
+GEDCOM_TAG_PHYSICAL_DESCRIPTION = &#34;DSCR&#34;
+&#34;&#34;&#34;Value: `DSCR`
+
+The physical characteristics of a person, place, or thing.
+&#34;&#34;&#34;
+
 GEDCOM_TAG_PHY_DESCRIPTION = &#34;DSCR&#34;
 &#34;&#34;&#34;Value: `DSCR`
+::deprecated:: As of version 1.7.0 use `GEDCOM_TAG_PHYSICAL_DESCRIPTION` method instead
 
 The physical characteristics of a person, place, or thing.
 &#34;&#34;&#34;
@@ -473,6 +480,13 @@ An individual in the family role of a married man or father.
 
 GEDCOM_TAG_IDENT_NUMBER = &#34;IDNO&#34;
 &#34;&#34;&#34;Value: `IDNO`
+::deprecated:: As of version 1.7.0 use `GEDCOM_TAG_IDENTIFICATION_NUMBER` method instead
+
+A number assigned to identify a person within some significant external system.
+&#34;&#34;&#34;
+
+GEDCOM_TAG_IDENTIFICATION_NUMBER = &#34;IDNO&#34;
+&#34;&#34;&#34;Value: `IDNO`
 
 A number assigned to identify a person within some significant external system.
 &#34;&#34;&#34;
@@ -523,9 +537,18 @@ GEDCOM_TAG_MARRIAGE_BANN = &#34;MARB&#34;
 &#34;&#34;&#34;Value: `MARB`
 
 An event of an official public notice given that two people intend to marry.
+Where the term comes from: https://en.wikipedia.org/wiki/Banns_of_marriage
 &#34;&#34;&#34;
 
 GEDCOM_TAG_MARR_CONTRACT = &#34;MARC&#34;
+&#34;&#34;&#34;Value: `MARC`
+::deprecated:: As of version 1.7.0 use `GEDCOM_TAG_MARRIAGE_CONTRACT` method instead
+
+An event of recording a formal agreement of marriage, including the prenuptial agreement in which marriage partners reach 
+agreement about the property rights of one or both, securing property to their children.
+&#34;&#34;&#34;
+
+GEDCOM_TAG_MARRIAGE_CONTRACT = &#34;MARC&#34;
 &#34;&#34;&#34;Value: `MARC`
 
 An event of recording a formal agreement of marriage, including the prenuptial agreement in which marriage partners reach 
@@ -533,6 +556,13 @@ agreement about the property rights of one or both, securing property to their c
 &#34;&#34;&#34;
 
 GEDCOM_TAG_MARR_LICENSE = &#34;MARL&#34;
+&#34;&#34;&#34;Value: `MARL`
+::deprecated:: As of version 1.7.0 use `GEDCOM_TAG_MARRIAGE_LICENSE` method instead
+
+An event of obtaining a legal license to marry.
+&#34;&#34;&#34;
+
+GEDCOM_TAG_MARRIAGE_LICENSE = &#34;MARL&#34;
 &#34;&#34;&#34;Value: `MARL`
 
 An event of obtaining a legal license to marry.
@@ -545,6 +575,14 @@ A legal, common-law, or customary event of creating a family unit of a man and a
 &#34;&#34;&#34;
 
 GEDCOM_TAG_MARR_SETTLEMENT = &#34;MARS&#34;
+&#34;&#34;&#34;Value: `MARS`
+::deprecated:: As of version 1.7.0 use `GEDCOM_TAG_MARRIAGE_SETTLEMENT` method instead
+
+An event of creating an agreement between two people contemplating marriage, at which time they agree to release or modify 
+property rights that would otherwise arise from the marriage.
+&#34;&#34;&#34;
+
+GEDCOM_TAG_MARRIAGE_SETTLEMENT = &#34;MARS&#34;
 &#34;&#34;&#34;Value: `MARS`
 
 An event of creating an agreement between two people contemplating marriage, at which time they agree to release or modify 
@@ -802,8 +840,15 @@ GEDCOM_TAG_SURN_PREFIX = &#34;SPFX&#34;
 A name piece used as a non-indexing pre-part of a surname.
 &#34;&#34;&#34;
 
+GEDCOM_TAG_SOCIAL_SECURITY_NUMBER = &#34;SSN&#34;
+&#34;&#34;&#34;Value: `SSN`
+
+A number assigned by the United States Social Security Administration. Used for tax identification purposes.
+&#34;&#34;&#34;
+
 GEDCOM_TAG_SOC_SEC_NUMBER = &#34;SSN&#34;
 &#34;&#34;&#34;Value: `SSN`
+::deprecated:: As of version 1.7.0 use `GEDCOM_TAG_SOCIAL_SECURITY_NUMBER` method instead
 
 A number assigned by the United States Social Security Administration. Used for tax identification purposes.
 &#34;&#34;&#34;
@@ -1280,9 +1325,15 @@ if any, or a family created by virtue of the birth of a child to its biological 
 <div class="desc"><p>Value: <code>HUSB</code></p>
 <p>An individual in the family role of a married man or father.</p></div>
 </dd>
-<dt id="python_gedcom_2.tags.GEDCOM_TAG_IDENT_NUMBER"><code class="name">var <span class="ident">GEDCOM_TAG_IDENT_NUMBER</span></code></dt>
+<dt id="python_gedcom_2.tags.GEDCOM_TAG_IDENTIFICATION_NUMBER"><code class="name">var <span class="ident">GEDCOM_TAG_IDENTIFICATION_NUMBER</span></code></dt>
 <dd>
 <div class="desc"><p>Value: <code>IDNO</code></p>
+<p>A number assigned to identify a person within some significant external system.</p></div>
+</dd>
+<dt id="python_gedcom_2.tags.GEDCOM_TAG_IDENT_NUMBER"><code class="name">var <span class="ident">GEDCOM_TAG_IDENT_NUMBER</span></code></dt>
+<dd>
+<div class="desc"><p>Value: <code>IDNO</code>
+::deprecated:: As of version 1.7.0 use <code><a title="python_gedcom_2.tags.GEDCOM_TAG_IDENTIFICATION_NUMBER" href="#python_gedcom_2.tags.GEDCOM_TAG_IDENTIFICATION_NUMBER">GEDCOM_TAG_IDENTIFICATION_NUMBER</a></code> method instead</p>
 <p>A number assigned to identify a person within some significant external system.</p></div>
 </dd>
 <dt id="python_gedcom_2.tags.GEDCOM_TAG_IMMIGRATION"><code class="name">var <span class="ident">GEDCOM_TAG_IMMIGRATION</span></code></dt>
@@ -1328,27 +1379,48 @@ if any, or a family created by virtue of the birth of a child to its biological 
 <dt id="python_gedcom_2.tags.GEDCOM_TAG_MARRIAGE_BANN"><code class="name">var <span class="ident">GEDCOM_TAG_MARRIAGE_BANN</span></code></dt>
 <dd>
 <div class="desc"><p>Value: <code>MARB</code></p>
-<p>An event of an official public notice given that two people intend to marry.</p></div>
+<p>An event of an official public notice given that two people intend to marry.
+Where the term comes from: <a href="https://en.wikipedia.org/wiki/Banns_of_marriage">https://en.wikipedia.org/wiki/Banns_of_marriage</a></p></div>
+</dd>
+<dt id="python_gedcom_2.tags.GEDCOM_TAG_MARRIAGE_CONTRACT"><code class="name">var <span class="ident">GEDCOM_TAG_MARRIAGE_CONTRACT</span></code></dt>
+<dd>
+<div class="desc"><p>Value: <code>MARC</code></p>
+<p>An event of recording a formal agreement of marriage, including the prenuptial agreement in which marriage partners reach
+agreement about the property rights of one or both, securing property to their children.</p></div>
 </dd>
 <dt id="python_gedcom_2.tags.GEDCOM_TAG_MARRIAGE_COUNT"><code class="name">var <span class="ident">GEDCOM_TAG_MARRIAGE_COUNT</span></code></dt>
 <dd>
 <div class="desc"><p>Value: <code>NMR</code></p>
 <p>The number of times this person has participated in a family as a spouse or parent.</p></div>
 </dd>
+<dt id="python_gedcom_2.tags.GEDCOM_TAG_MARRIAGE_LICENSE"><code class="name">var <span class="ident">GEDCOM_TAG_MARRIAGE_LICENSE</span></code></dt>
+<dd>
+<div class="desc"><p>Value: <code>MARL</code></p>
+<p>An event of obtaining a legal license to marry.</p></div>
+</dd>
+<dt id="python_gedcom_2.tags.GEDCOM_TAG_MARRIAGE_SETTLEMENT"><code class="name">var <span class="ident">GEDCOM_TAG_MARRIAGE_SETTLEMENT</span></code></dt>
+<dd>
+<div class="desc"><p>Value: <code>MARS</code></p>
+<p>An event of creating an agreement between two people contemplating marriage, at which time they agree to release or modify
+property rights that would otherwise arise from the marriage.</p></div>
+</dd>
 <dt id="python_gedcom_2.tags.GEDCOM_TAG_MARR_CONTRACT"><code class="name">var <span class="ident">GEDCOM_TAG_MARR_CONTRACT</span></code></dt>
 <dd>
-<div class="desc"><p>Value: <code>MARC</code></p>
+<div class="desc"><p>Value: <code>MARC</code>
+::deprecated:: As of version 1.7.0 use <code><a title="python_gedcom_2.tags.GEDCOM_TAG_MARRIAGE_CONTRACT" href="#python_gedcom_2.tags.GEDCOM_TAG_MARRIAGE_CONTRACT">GEDCOM_TAG_MARRIAGE_CONTRACT</a></code> method instead</p>
 <p>An event of recording a formal agreement of marriage, including the prenuptial agreement in which marriage partners reach
 agreement about the property rights of one or both, securing property to their children.</p></div>
 </dd>
 <dt id="python_gedcom_2.tags.GEDCOM_TAG_MARR_LICENSE"><code class="name">var <span class="ident">GEDCOM_TAG_MARR_LICENSE</span></code></dt>
 <dd>
-<div class="desc"><p>Value: <code>MARL</code></p>
+<div class="desc"><p>Value: <code>MARL</code>
+::deprecated:: As of version 1.7.0 use <code><a title="python_gedcom_2.tags.GEDCOM_TAG_MARRIAGE_LICENSE" href="#python_gedcom_2.tags.GEDCOM_TAG_MARRIAGE_LICENSE">GEDCOM_TAG_MARRIAGE_LICENSE</a></code> method instead</p>
 <p>An event of obtaining a legal license to marry.</p></div>
 </dd>
 <dt id="python_gedcom_2.tags.GEDCOM_TAG_MARR_SETTLEMENT"><code class="name">var <span class="ident">GEDCOM_TAG_MARR_SETTLEMENT</span></code></dt>
 <dd>
-<div class="desc"><p>Value: <code>MARS</code></p>
+<div class="desc"><p>Value: <code>MARS</code>
+::deprecated:: As of version 1.7.0 use <code><a title="python_gedcom_2.tags.GEDCOM_TAG_MARRIAGE_SETTLEMENT" href="#python_gedcom_2.tags.GEDCOM_TAG_MARRIAGE_SETTLEMENT">GEDCOM_TAG_MARRIAGE_SETTLEMENT</a></code> method instead</p>
 <p>An event of creating an agreement between two people contemplating marriage, at which time they agree to release or modify
 property rights that would otherwise arise from the marriage.</p></div>
 </dd>
@@ -1436,9 +1508,15 @@ to represent a multimedia object, such an audio recording, a photograph of a per
 <div class="desc"><p>Value: <code>FONE</code></p>
 <p>A phonetic variation of a superior text string. new in Gedcom 5.5.1</p></div>
 </dd>
-<dt id="python_gedcom_2.tags.GEDCOM_TAG_PHY_DESCRIPTION"><code class="name">var <span class="ident">GEDCOM_TAG_PHY_DESCRIPTION</span></code></dt>
+<dt id="python_gedcom_2.tags.GEDCOM_TAG_PHYSICAL_DESCRIPTION"><code class="name">var <span class="ident">GEDCOM_TAG_PHYSICAL_DESCRIPTION</span></code></dt>
 <dd>
 <div class="desc"><p>Value: <code>DSCR</code></p>
+<p>The physical characteristics of a person, place, or thing.</p></div>
+</dd>
+<dt id="python_gedcom_2.tags.GEDCOM_TAG_PHY_DESCRIPTION"><code class="name">var <span class="ident">GEDCOM_TAG_PHY_DESCRIPTION</span></code></dt>
+<dd>
+<div class="desc"><p>Value: <code>DSCR</code>
+::deprecated:: As of version 1.7.0 use <code><a title="python_gedcom_2.tags.GEDCOM_TAG_PHYSICAL_DESCRIPTION" href="#python_gedcom_2.tags.GEDCOM_TAG_PHYSICAL_DESCRIPTION">GEDCOM_TAG_PHYSICAL_DESCRIPTION</a></code> method instead</p>
 <p>The physical characteristics of a person, place, or thing.</p></div>
 </dd>
 <dt id="python_gedcom_2.tags.GEDCOM_TAG_PLACE"><code class="name">var <span class="ident">GEDCOM_TAG_PLACE</span></code></dt>
@@ -1546,9 +1624,15 @@ to represent a multimedia object, such an audio recording, a photograph of a per
 <div class="desc"><p>Value: <code>SEX</code></p>
 <p>Indicates the sex of an individual&ndash;male or female.</p></div>
 </dd>
-<dt id="python_gedcom_2.tags.GEDCOM_TAG_SOC_SEC_NUMBER"><code class="name">var <span class="ident">GEDCOM_TAG_SOC_SEC_NUMBER</span></code></dt>
+<dt id="python_gedcom_2.tags.GEDCOM_TAG_SOCIAL_SECURITY_NUMBER"><code class="name">var <span class="ident">GEDCOM_TAG_SOCIAL_SECURITY_NUMBER</span></code></dt>
 <dd>
 <div class="desc"><p>Value: <code>SSN</code></p>
+<p>A number assigned by the United States Social Security Administration. Used for tax identification purposes.</p></div>
+</dd>
+<dt id="python_gedcom_2.tags.GEDCOM_TAG_SOC_SEC_NUMBER"><code class="name">var <span class="ident">GEDCOM_TAG_SOC_SEC_NUMBER</span></code></dt>
+<dd>
+<div class="desc"><p>Value: <code>SSN</code>
+::deprecated:: As of version 1.7.0 use <code><a title="python_gedcom_2.tags.GEDCOM_TAG_SOCIAL_SECURITY_NUMBER" href="#python_gedcom_2.tags.GEDCOM_TAG_SOCIAL_SECURITY_NUMBER">GEDCOM_TAG_SOCIAL_SECURITY_NUMBER</a></code> method instead</p>
 <p>A number assigned by the United States Social Security Administration. Used for tax identification purposes.</p></div>
 </dd>
 <dt id="python_gedcom_2.tags.GEDCOM_TAG_SOURCE"><code class="name">var <span class="ident">GEDCOM_TAG_SOURCE</span></code></dt>
@@ -1733,6 +1817,7 @@ death. The event date is the date the will was signed while the person was alive
 <li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_GRADUATION" href="#python_gedcom_2.tags.GEDCOM_TAG_GRADUATION">GEDCOM_TAG_GRADUATION</a></code></li>
 <li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_HEADER" href="#python_gedcom_2.tags.GEDCOM_TAG_HEADER">GEDCOM_TAG_HEADER</a></code></li>
 <li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_HUSBAND" href="#python_gedcom_2.tags.GEDCOM_TAG_HUSBAND">GEDCOM_TAG_HUSBAND</a></code></li>
+<li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_IDENTIFICATION_NUMBER" href="#python_gedcom_2.tags.GEDCOM_TAG_IDENTIFICATION_NUMBER">GEDCOM_TAG_IDENTIFICATION_NUMBER</a></code></li>
 <li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_IDENT_NUMBER" href="#python_gedcom_2.tags.GEDCOM_TAG_IDENT_NUMBER">GEDCOM_TAG_IDENT_NUMBER</a></code></li>
 <li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_IMMIGRATION" href="#python_gedcom_2.tags.GEDCOM_TAG_IMMIGRATION">GEDCOM_TAG_IMMIGRATION</a></code></li>
 <li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL" href="#python_gedcom_2.tags.GEDCOM_TAG_INDIVIDUAL">GEDCOM_TAG_INDIVIDUAL</a></code></li>
@@ -1743,7 +1828,10 @@ death. The event date is the date the will was signed while the person was alive
 <li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_MAP" href="#python_gedcom_2.tags.GEDCOM_TAG_MAP">GEDCOM_TAG_MAP</a></code></li>
 <li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_MARRIAGE" href="#python_gedcom_2.tags.GEDCOM_TAG_MARRIAGE">GEDCOM_TAG_MARRIAGE</a></code></li>
 <li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_MARRIAGE_BANN" href="#python_gedcom_2.tags.GEDCOM_TAG_MARRIAGE_BANN">GEDCOM_TAG_MARRIAGE_BANN</a></code></li>
+<li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_MARRIAGE_CONTRACT" href="#python_gedcom_2.tags.GEDCOM_TAG_MARRIAGE_CONTRACT">GEDCOM_TAG_MARRIAGE_CONTRACT</a></code></li>
 <li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_MARRIAGE_COUNT" href="#python_gedcom_2.tags.GEDCOM_TAG_MARRIAGE_COUNT">GEDCOM_TAG_MARRIAGE_COUNT</a></code></li>
+<li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_MARRIAGE_LICENSE" href="#python_gedcom_2.tags.GEDCOM_TAG_MARRIAGE_LICENSE">GEDCOM_TAG_MARRIAGE_LICENSE</a></code></li>
+<li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_MARRIAGE_SETTLEMENT" href="#python_gedcom_2.tags.GEDCOM_TAG_MARRIAGE_SETTLEMENT">GEDCOM_TAG_MARRIAGE_SETTLEMENT</a></code></li>
 <li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_MARR_CONTRACT" href="#python_gedcom_2.tags.GEDCOM_TAG_MARR_CONTRACT">GEDCOM_TAG_MARR_CONTRACT</a></code></li>
 <li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_MARR_LICENSE" href="#python_gedcom_2.tags.GEDCOM_TAG_MARR_LICENSE">GEDCOM_TAG_MARR_LICENSE</a></code></li>
 <li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_MARR_SETTLEMENT" href="#python_gedcom_2.tags.GEDCOM_TAG_MARR_SETTLEMENT">GEDCOM_TAG_MARR_SETTLEMENT</a></code></li>
@@ -1763,6 +1851,7 @@ death. The event date is the date the will was signed while the person was alive
 <li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_PEDIGREE" href="#python_gedcom_2.tags.GEDCOM_TAG_PEDIGREE">GEDCOM_TAG_PEDIGREE</a></code></li>
 <li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_PHONE" href="#python_gedcom_2.tags.GEDCOM_TAG_PHONE">GEDCOM_TAG_PHONE</a></code></li>
 <li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_PHONETIC" href="#python_gedcom_2.tags.GEDCOM_TAG_PHONETIC">GEDCOM_TAG_PHONETIC</a></code></li>
+<li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_PHYSICAL_DESCRIPTION" href="#python_gedcom_2.tags.GEDCOM_TAG_PHYSICAL_DESCRIPTION">GEDCOM_TAG_PHYSICAL_DESCRIPTION</a></code></li>
 <li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_PHY_DESCRIPTION" href="#python_gedcom_2.tags.GEDCOM_TAG_PHY_DESCRIPTION">GEDCOM_TAG_PHY_DESCRIPTION</a></code></li>
 <li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_PLACE" href="#python_gedcom_2.tags.GEDCOM_TAG_PLACE">GEDCOM_TAG_PLACE</a></code></li>
 <li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_POSTAL_CODE" href="#python_gedcom_2.tags.GEDCOM_TAG_POSTAL_CODE">GEDCOM_TAG_POSTAL_CODE</a></code></li>
@@ -1785,6 +1874,7 @@ death. The event date is the date the will was signed while the person was alive
 <li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_SEALING_CHILD" href="#python_gedcom_2.tags.GEDCOM_TAG_SEALING_CHILD">GEDCOM_TAG_SEALING_CHILD</a></code></li>
 <li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_SEALING_SPOUSE" href="#python_gedcom_2.tags.GEDCOM_TAG_SEALING_SPOUSE">GEDCOM_TAG_SEALING_SPOUSE</a></code></li>
 <li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_SEX" href="#python_gedcom_2.tags.GEDCOM_TAG_SEX">GEDCOM_TAG_SEX</a></code></li>
+<li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_SOCIAL_SECURITY_NUMBER" href="#python_gedcom_2.tags.GEDCOM_TAG_SOCIAL_SECURITY_NUMBER">GEDCOM_TAG_SOCIAL_SECURITY_NUMBER</a></code></li>
 <li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_SOC_SEC_NUMBER" href="#python_gedcom_2.tags.GEDCOM_TAG_SOC_SEC_NUMBER">GEDCOM_TAG_SOC_SEC_NUMBER</a></code></li>
 <li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_SOURCE" href="#python_gedcom_2.tags.GEDCOM_TAG_SOURCE">GEDCOM_TAG_SOURCE</a></code></li>
 <li><code><a title="python_gedcom_2.tags.GEDCOM_TAG_STATE" href="#python_gedcom_2.tags.GEDCOM_TAG_STATE">GEDCOM_TAG_STATE</a></code></li>

@@ -2,8 +2,10 @@
 
 import re as regex
 
-from python_gedcom_2.element.date import DateElement
+from python_gedcom_2.element.birth import BirthElement
+from python_gedcom_2.element.death import DeathElement
 from python_gedcom_2.element.element import Element
+from python_gedcom_2.element.event_detail import EventDetail
 from python_gedcom_2.helpers import deprecated
 import python_gedcom_2.tags
 
@@ -162,28 +164,24 @@ class IndividualElement(Element):
         """
         return self.__get_data_for_date_bearing_tag(python_gedcom_2.tags.GEDCOM_TAG_DEATH)
 
-    def __get_year_in_tag_type(self, tag):
-        date = -1
-
+    def __get_year_in_element(self, element_class):
+        year = -1
         for child in self.get_child_elements():
-            if child.get_tag() == tag:
-                for childOfChild in child.get_child_elements():
-                    if isinstance(childOfChild, DateElement):
-                        date = childOfChild.get_year()
-
-        return date
+            if isinstance(child, EventDetail) and isinstance(child, element_class):
+                year = child.get_year_in_date()
+        return year
 
     def get_birth_year(self):
         """Returns the birth year of a person in integer format
         :rtype: int
         """
-        return self.__get_year_in_tag_type(python_gedcom_2.tags.GEDCOM_TAG_BIRTH)
+        return self.__get_year_in_element(BirthElement)
 
     def get_death_year(self):
         """Returns the death year of a person in integer format
         :rtype: int
         """
-        return self.__get_year_in_tag_type(python_gedcom_2.tags.GEDCOM_TAG_DEATH)
+        return self.__get_year_in_element(DeathElement)
 
     @deprecated
     def get_burial(self):
