@@ -20,7 +20,7 @@
 
 ## Documentation
 
-Documentation can be found here: https://swanny0819.github.io/python-gedcom-2/gedcom/index.html
+Documentation can be found here: https://swanny0819.github.io/python-gedcom-2/python_gedcom_2/index.html
 
 ## Changelog
 
